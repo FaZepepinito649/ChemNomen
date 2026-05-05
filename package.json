@@ -1,0 +1,8 @@
+{
+  "name": "chemnomen",
+  "version": "1.0.0",
+  "description": "IUPAC organic nomenclature trainer with AI tutor",
+  "engines": {
+    "node": ">=18"
+  }
+}
