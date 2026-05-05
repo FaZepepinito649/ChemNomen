@@ -515,71 +515,11 @@ const LEARN_DATA = [
   },
 ];
 
-const DB = [
-  {id:1,iupac:'propane',look:'propane',acc:['propane'],cat:'alkane'},
-  {id:2,iupac:'butane',look:'butane',acc:['butane'],cat:'alkane'},
-  {id:3,iupac:'pentane',look:'pentane',acc:['pentane'],cat:'alkane'},
-  {id:4,iupac:'hexane',look:'hexane',acc:['hexane'],cat:'alkane'},
-  {id:5,iupac:'2-methylpropane',look:'isobutane',acc:['2-methylpropane','isobutane'],cat:'alkane'},
-  {id:6,iupac:'2-methylbutane',look:'isopentane',acc:['2-methylbutane','isopentane'],cat:'alkane'},
-  {id:7,iupac:'2,2-dimethylpropane',look:'neopentane',acc:['2,2-dimethylpropane','neopentane'],cat:'alkane'},
-  {id:8,iupac:'2,3-dimethylbutane',look:'2,3-dimethylbutane',acc:['2,3-dimethylbutane'],cat:'alkane'},
-  {id:9,iupac:'3-methylpentane',look:'3-methylpentane',acc:['3-methylpentane'],cat:'alkane'},
-  {id:10,iupac:'2-methylpentane',look:'2-methylpentane',acc:['2-methylpentane','isohexane'],cat:'alkane'},
-  {id:11,iupac:'2,2-dimethylbutane',look:'2,2-dimethylbutane',acc:['2,2-dimethylbutane'],cat:'alkane'},
-  {id:12,iupac:'ethene',look:'ethylene',acc:['ethene','ethylene'],cat:'alkene'},
-  {id:13,iupac:'propene',look:'propylene',acc:['propene','propylene'],cat:'alkene'},
-  {id:14,iupac:'but-1-ene',look:'1-butene',acc:['but-1-ene','1-butene'],cat:'alkene'},
-  {id:15,iupac:'but-2-ene',look:'2-butene',acc:['but-2-ene','2-butene'],cat:'alkene'},
-  {id:16,iupac:'2-methylpropene',look:'isobutylene',acc:['2-methylpropene','2-methyl-1-propene','isobutylene','isobutene'],cat:'alkene'},
-  {id:17,iupac:'pent-1-ene',look:'1-pentene',acc:['pent-1-ene','1-pentene'],cat:'alkene'},
-  {id:18,iupac:'3-methylbut-1-ene',look:'3-methyl-1-butene',acc:['3-methylbut-1-ene','3-methyl-1-butene'],cat:'alkene'},
-  {id:19,iupac:'2-methylbut-2-ene',look:'2-methyl-2-butene',acc:['2-methylbut-2-ene','2-methyl-2-butene'],cat:'alkene'},
-  {id:20,iupac:'ethyne',look:'acetylene',acc:['ethyne','acetylene'],cat:'alkyne'},
-  {id:21,iupac:'propyne',look:'methylacetylene',acc:['propyne','prop-1-yne','methylacetylene'],cat:'alkyne'},
-  {id:22,iupac:'but-1-yne',look:'1-butyne',acc:['but-1-yne','1-butyne'],cat:'alkyne'},
-  {id:23,iupac:'but-2-yne',look:'2-butyne',acc:['but-2-yne','2-butyne'],cat:'alkyne'},
-  {id:24,iupac:'pent-1-yne',look:'1-pentyne',acc:['pent-1-yne','1-pentyne'],cat:'alkyne'},
-  {id:25,iupac:'methanol',look:'methanol',acc:['methanol'],cat:'alcohol'},
-  {id:26,iupac:'ethanol',look:'ethanol',acc:['ethanol'],cat:'alcohol'},
-  {id:27,iupac:'propan-1-ol',look:'1-propanol',acc:['propan-1-ol','1-propanol'],cat:'alcohol'},
-  {id:28,iupac:'propan-2-ol',look:'2-propanol',acc:['propan-2-ol','2-propanol','isopropanol'],cat:'alcohol'},
-  {id:29,iupac:'butan-1-ol',look:'1-butanol',acc:['butan-1-ol','1-butanol'],cat:'alcohol'},
-  {id:30,iupac:'butan-2-ol',look:'2-butanol',acc:['butan-2-ol','2-butanol'],cat:'alcohol'},
-  {id:31,iupac:'2-methylpropan-1-ol',look:'isobutanol',acc:['2-methylpropan-1-ol','2-methyl-1-propanol','isobutanol'],cat:'alcohol'},
-  {id:32,iupac:'2-methylpropan-2-ol',look:'tert-butanol',acc:['2-methylpropan-2-ol','2-methyl-2-propanol','tert-butanol'],cat:'alcohol'},
-  {id:33,iupac:'methanal',look:'formaldehyde',acc:['methanal','formaldehyde'],cat:'aldehyde'},
-  {id:34,iupac:'ethanal',look:'acetaldehyde',acc:['ethanal','acetaldehyde'],cat:'aldehyde'},
-  {id:35,iupac:'propanal',look:'propanal',acc:['propanal','propionaldehyde'],cat:'aldehyde'},
-  {id:36,iupac:'butanal',look:'butanal',acc:['butanal','butyraldehyde'],cat:'aldehyde'},
-  {id:37,iupac:'pentanal',look:'pentanal',acc:['pentanal'],cat:'aldehyde'},
-  {id:38,iupac:'propanone',look:'acetone',acc:['propanone','acetone'],cat:'ketone'},
-  {id:39,iupac:'butan-2-one',look:'methyl ethyl ketone',acc:['butan-2-one','butanone','2-butanone','methyl ethyl ketone'],cat:'ketone'},
-  {id:40,iupac:'pentan-2-one',look:'methyl propyl ketone',acc:['pentan-2-one','2-pentanone','methyl propyl ketone'],cat:'ketone'},
-  {id:41,iupac:'pentan-3-one',look:'diethyl ketone',acc:['pentan-3-one','3-pentanone','diethyl ketone'],cat:'ketone'},
-  {id:42,iupac:'hexan-2-one',look:'methyl butyl ketone',acc:['hexan-2-one','2-hexanone','methyl butyl ketone'],cat:'ketone'},
-  {id:43,iupac:'methanoic acid',look:'formic acid',acc:['methanoic acid','formic acid'],cat:'carboxylic acid'},
-  {id:44,iupac:'ethanoic acid',look:'acetic acid',acc:['ethanoic acid','acetic acid'],cat:'carboxylic acid'},
-  {id:45,iupac:'propanoic acid',look:'propionic acid',acc:['propanoic acid','propionic acid'],cat:'carboxylic acid'},
-  {id:46,iupac:'butanoic acid',look:'butyric acid',acc:['butanoic acid','butyric acid'],cat:'carboxylic acid'},
-  {id:47,iupac:'pentanoic acid',look:'valeric acid',acc:['pentanoic acid','valeric acid'],cat:'carboxylic acid'},
-  {id:48,iupac:'methanamine',look:'methylamine',acc:['methanamine','methylamine'],cat:'amine'},
-  {id:49,iupac:'ethanamine',look:'ethylamine',acc:['ethanamine','ethylamine'],cat:'amine'},
-  {id:50,iupac:'propan-1-amine',look:'propylamine',acc:['propan-1-amine','1-propylamine','propylamine'],cat:'amine'},
-  {id:51,iupac:'propan-2-amine',look:'isopropylamine',acc:['propan-2-amine','2-propylamine','isopropylamine'],cat:'amine'},
-  {id:52,iupac:'N-methylmethanamine',look:'dimethylamine',acc:['n-methylmethanamine','dimethylamine'],cat:'amine'},
-  {id:53,iupac:'aniline',look:'aniline',acc:['aniline','phenylamine','aminobenzene'],cat:'amine'},
-  {id:54,iupac:'methanamide',look:'formamide',acc:['methanamide','formamide'],cat:'amide'},
-  {id:55,iupac:'ethanamide',look:'acetamide',acc:['ethanamide','acetamide'],cat:'amide'},
-  {id:56,iupac:'propanamide',look:'propanamide',acc:['propanamide'],cat:'amide'},
-  {id:57,iupac:'benzamide',look:'benzamide',acc:['benzamide'],cat:'amide'},
-  {id:58,iupac:'benzene',look:'benzene',acc:['benzene'],cat:'aromatic'},
-  {id:59,iupac:'methylbenzene',look:'toluene',acc:['methylbenzene','toluene'],cat:'aromatic'},
-  {id:60,iupac:'ethylbenzene',look:'ethylbenzene',acc:['ethylbenzene'],cat:'aromatic'},
-  {id:61,iupac:'chlorobenzene',look:'chlorobenzene',acc:['chlorobenzene'],cat:'aromatic'},
-  {id:62,iupac:'nitrobenzene',look:'nitrobenzene',acc:['nitrobenzene'],cat:'aromatic'},
-  {id:63,iupac:'styrene',look:'styrene',acc:['styrene','vinylbenzene','ethenylbenzene'],cat:'aromatic'},
-];
+let DB = [];
+async function loadDB() {
+  const res = await fetch('/compounds.json');
+  DB = await res.json();
+}
 
 // ══════════════════════════════════════════════════
 //  AUTH STATE
@@ -885,8 +825,10 @@ Ask me about:
 
 I won't spoil quiz answers, but I'll guide you there! 🧪`);
 
-const first=nextCompound();
-if(first)loadCompound(first);
+loadDB().then(() => {
+  const first = nextCompound();
+  if (first) loadCompound(first);
+});
 </script>
 </body>
 </html>
