@@ -1,0 +1,11 @@
+{
+  "name": "chemnomen",
+  "version": "2.0.0",
+  "description": "IUPAC organic nomenclature trainer with user system and AI tutor",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^7"
+  }
+}

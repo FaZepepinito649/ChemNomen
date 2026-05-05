@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChemNomen — IUPAC Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a1f5e;--navy2:#252b7e;--pink:#e8408a;--pink2:#f5a8cc;
+  --green:#5abf32;--green2:#a3e07c;--cream:#f5f7ff;
+  --gray:#8891b5;--error:#ef4444;--ok:#22c55e;--warn:#f59e0b;
+  --purple:#8b5cf6;--border:rgba(26,31,94,.1);--sh:0 4px 24px rgba(26,31,94,.1)
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);
+  background-image:linear-gradient(rgba(26,31,94,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,31,94,.05) 1px,transparent 1px);
+  background-size:28px 28px;min-height:100vh;color:var(--navy)}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.3rem}
+.logo-ico{width:34px;height:34px;background:var(--pink);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hbadge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;
+  padding:5px 13px;font-weight:700;font-size:.82rem;color:#fff;white-space:nowrap}
+.hbadge .num{color:var(--green2)}
+.login-btn{background:var(--pink);border:none;border-radius:20px;padding:6px 16px;
+  color:#fff;font-family:inherit;font-weight:800;font-size:.82rem;cursor:pointer;transition:opacity .15s}
+.login-btn:hover{opacity:.85}
+.user-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;
+  padding:5px 13px;color:#fff;font-family:inherit;font-weight:700;font-size:.82rem;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:background .15s}
+.user-btn:hover{background:rgba(255,255,255,.2)}
+.user-dot{width:8px;height:8px;border-radius:50%;background:var(--green2)}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:1fr 370px;max-width:1160px;margin:0 auto;min-height:calc(100vh - 54px)}
+.quiz{padding:20px;display:flex;flex-direction:column;gap:16px}
+
+/* ── MODE SWITCHER ───────────────────────────────────────── */
+.mode-switch{display:flex;gap:8px;background:#fff;border:2px solid var(--border);border-radius:14px;padding:4px;width:fit-content}
+.mode-btn{padding:6px 18px;border:none;border-radius:10px;font-family:inherit;font-weight:800;font-size:.82rem;
+  cursor:pointer;transition:all .18s;color:var(--gray);background:none}
+.mode-btn.on{background:var(--navy);color:#fff}
+
+/* ── FILTERS ─────────────────────────────────────────────── */
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{background:#fff;border:2px solid var(--border);border-radius:20px;padding:4px 12px;
+  font-family:inherit;font-size:.75rem;font-weight:800;color:var(--gray);cursor:pointer;transition:all .15s}
+.fbtn:hover{border-color:var(--navy);color:var(--navy)}
+.fbtn.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ── COMPOUND CARD ───────────────────────────────────────── */
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);border:2px solid var(--border);overflow:hidden;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.img-wrap{background:linear-gradient(135deg,#e8edf8,#f0f4ff);display:flex;align-items:center;
+  justify-content:center;min-height:250px;position:relative}
+#structImg{max-width:300px;max-height:234px;object-fit:contain;display:none;border-radius:6px}
+.cat-badge{position:absolute;top:12px;left:12px;background:var(--navy);color:#fff;
+  padding:3px 11px;border-radius:11px;font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+.diff-badge{position:absolute;top:12px;right:12px;padding:3px 11px;border-radius:11px;
+  font-size:.7rem;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:.3px}
+.img-loader{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--navy);
+  border-radius:50%;animation:spin .8s linear infinite;position:absolute}
+@keyframes spin{to{transform:rotate(360deg)}}
+.img-err{color:var(--gray);font-size:.85rem;text-align:center;padding:20px}
+.card-body{padding:18px}
+.attempts{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.att-lbl{font-size:.74rem;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.3px}
+.dot{width:17px;height:17px;border-radius:50%;border:2.5px solid #dde;background:#fff;transition:all .25s}
+.dot.bad{background:var(--error);border-color:var(--error);transform:scale(1.1)}
+.ans-row{display:flex;gap:9px}
+#ansInput{flex:1;padding:12px 15px;border:2.5px solid var(--border);border-radius:13px;
+  font-family:'Fira Code',monospace;font-size:.97rem;color:var(--navy);background:#fff;outline:none;transition:border-color .18s}
+#ansInput:focus{border-color:var(--navy)}
+#ansInput.ok{border-color:var(--ok);background:#f0fdf4}
+#ansInput.bad{border-color:var(--error);background:#fff1f1;animation:shake .36s}
+@keyframes shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-8px)}70%{transform:translateX(8px)}}
+.sub-btn{padding:12px 20px;background:var(--navy);color:#fff;border:none;border-radius:13px;
+  font-family:inherit;font-weight:900;font-size:.9rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.sub-btn:hover{background:var(--navy2);transform:translateY(-1px)}
+.sub-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.fb{padding:10px 14px;border-radius:11px;font-weight:700;font-size:.86rem;display:none;margin-top:11px}
+.fb.ok{background:#dcfce7;color:#166534;border:2px solid #86efac;display:block}
+.fb.bad{background:#fee2e2;color:#991b1b;border:2px solid #fca5a5;display:block}
+.pts-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);
+  background:var(--navy);color:var(--green2);font-weight:900;font-size:1.1rem;
+  padding:10px 22px;border-radius:14px;box-shadow:var(--sh);opacity:0;pointer-events:none;
+  transition:all .3s;z-index:500;white-space:nowrap}
+.pts-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{margin-top:14px;background:#fffbee;border:2px solid #fcd34d;border-radius:16px;padding:16px;display:none}
+.reveal.on{display:block}
+.reveal-lbl{font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:7px}
+.reveal-name{font-family:'Fira Code',monospace;font-size:1.25rem;font-weight:600;color:#fcd34d;
+  background:var(--navy);padding:8px 14px;border-radius:9px;display:inline-block;margin-bottom:12px}
+.steps-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.step{display:flex;align-items:flex-start;gap:8px;font-size:.83rem;color:#78350f;line-height:1.45}
+.snum{width:20px;height:20px;border-radius:50%;background:#fcd34d;color:var(--navy);font-weight:900;
+  font-size:.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.next-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--green),#4ade80);color:var(--navy);
+  border:none;border-radius:13px;font-family:inherit;font-weight:900;font-size:.92rem;cursor:pointer;
+  transition:all .18s;margin-top:11px;display:none}
+.next-btn.on{display:block}
+.next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(90,191,50,.3)}
+.empty{text-align:center;padding:48px 20px;color:var(--gray);display:none}
+
+/* ── LEARN MODE ──────────────────────────────────────────── */
+#learnPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
+#learnPanel.on{display:flex}
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.learn-grid{grid-template-columns:1fr}}
+.learn-card{background:#fff;border-radius:18px;border:2px solid var(--border);box-shadow:var(--sh);overflow:hidden;cursor:pointer;transition:box-shadow .18s}
+.learn-card:hover{box-shadow:0 8px 32px rgba(26,31,94,.14)}
+.lc-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.lc-left{display:flex;align-items:center;gap:10px}
+.lc-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.lc-name{font-weight:900;font-size:.95rem}
+.lc-diff{font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:10px;color:#fff}
+.lc-arrow{color:var(--gray);font-size:1rem;transition:transform .2s}
+.learn-card.open .lc-arrow{transform:rotate(90deg)}
+.lc-body{display:none;border-top:2px solid var(--border);padding:16px}
+.learn-card.open .lc-body{display:block}
+.lc-what{font-size:.84rem;color:var(--navy);margin-bottom:12px;line-height:1.55;background:#f5f7ff;border-radius:10px;padding:10px 12px;border:1.5px solid var(--border)}
+.lc-formula{font-family:'Fira Code',monospace;font-weight:600;color:var(--pink);font-size:.9rem}
+.lc-steps-title{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:10px 0 7px}
+.lc-steps{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.lc-step{display:flex;gap:8px;font-size:.82rem;color:var(--navy);line-height:1.45}
+.lc-snum{width:19px;height:19px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900;
+  font-size:.68rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.lc-examples-title{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin-bottom:7px}
+.lc-examples{display:flex;flex-direction:column;gap:5px}
+.lc-ex{display:flex;align-items:center;justify-content:space-between;background:#f0f4ff;
+  border-radius:9px;padding:7px 11px;border:1.5px solid var(--border)}
+.lc-ex-struct{font-size:.8rem;color:var(--gray)}
+.lc-ex-name{font-family:'Fira Code',monospace;font-size:.82rem;font-weight:600;color:var(--navy)}
+.lc-pattern{margin-top:12px;padding:10px 12px;background:#f5fff5;border:1.5px solid #86efac;
+  border-radius:10px;font-size:.8rem;color:#166534;font-weight:700}
+
+/* ── RIGHT PANEL ─────────────────────────────────────────── */
+.rpanel{background:#fff;border-left:2px solid var(--border);display:flex;flex-direction:column;
+  height:calc(100vh - 54px);position:sticky;top:54px}
+.panel-tabs{display:flex;border-bottom:2px solid var(--border);flex-shrink:0}
+.ptab{flex:1;padding:11px;border:none;background:none;font-family:inherit;font-weight:800;font-size:.82rem;
+  color:var(--gray);cursor:pointer;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-2px}
+.ptab.on{color:var(--navy);border-bottom-color:var(--navy)}
+.panel-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-hdr{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.bot-ava{width:32px;height:32px;background:var(--pink);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.chat-title{font-weight:900;font-size:.92rem}
+.chat-sub{font-size:.7rem;color:var(--pink2);margin-top:1px}
+.msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.msg{max-width:86%;line-height:1.5;font-size:.84rem;word-break:break-word}
+.msg.u{align-self:flex-end;background:var(--navy);color:#fff;padding:8px 12px;border-radius:13px 13px 3px 13px}
+.msg.b{align-self:flex-start;background:#f0f4ff;color:var(--navy);padding:8px 12px;
+  border-radius:3px 13px 13px 13px;border:1.5px solid var(--border);white-space:pre-wrap}
+.typing{display:none;gap:4px;padding:8px 12px;background:#f0f4ff;border-radius:3px 13px 13px 13px;
+  border:1.5px solid var(--border);align-self:flex-start}
+.typing.on{display:flex}
+.tdot{width:5px;height:5px;background:var(--gray);border-radius:50%;animation:tb 1.2s infinite}
+.tdot:nth-child(2){animation-delay:.2s}.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tb{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-foot{padding:11px 13px;border-top:2px solid var(--border);display:flex;gap:7px;flex-shrink:0}
+#chatIn{flex:1;padding:8px 12px;border:2px solid var(--border);border-radius:10px;font-family:inherit;
+  font-size:.83rem;resize:none;outline:none;max-height:90px;min-height:38px;line-height:1.4;transition:border-color .15s}
+#chatIn:focus{border-color:var(--navy)}
+.send-btn{padding:8px 14px;background:var(--pink);color:#fff;border:none;border-radius:10px;
+  font-weight:900;font-size:.82rem;cursor:pointer;transition:all .15s;align-self:flex-end}
+.send-btn:hover{opacity:.85;transform:translateY(-1px)}
+.send-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.lb-wrap{flex:1;overflow-y:auto;padding:14px}
+.lb-title{font-weight:900;font-size:.95rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.lb-refresh{background:none;border:none;cursor:pointer;font-size:.9rem;color:var(--gray);transition:transform .3s}
+.lb-refresh:hover{transform:rotate(180deg)}
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;
+  background:#f5f7ff;border:1.5px solid var(--border);margin-bottom:7px}
+.lb-row.me{background:#e8f5ff;border-color:var(--navy)}
+.lb-rank{font-weight:900;font-size:.85rem;color:var(--gray);width:22px;text-align:center;flex-shrink:0}
+.lb-rank.gold{color:#f59e0b}.lb-rank.silver{color:#94a3b8}.lb-rank.bronze{color:#b45309}
+.lb-name{flex:1;font-weight:800;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-weight:900;font-size:.9rem;color:var(--navy)}
+.lb-stats{font-size:.72rem;color:var(--gray);margin-left:auto;margin-right:6px}
+.lb-empty{text-align:center;color:var(--gray);padding:30px;font-size:.88rem}
+.lb-login-hint{text-align:center;padding:12px;background:#f0f4ff;border-radius:12px;
+  font-size:.82rem;color:var(--navy);border:1.5px solid var(--border);margin-top:8px}
+
+/* ── AUTH MODAL ──────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(26,31,94,.55);z-index:300;display:flex;
+  align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.modal-bg.on{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:20px;padding:28px;width:340px;max-width:90vw;
+  box-shadow:0 20px 60px rgba(26,31,94,.25);position:relative;transform:translateY(16px);transition:transform .2s}
+.modal-bg.on .modal{transform:translateY(0)}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1.2rem;color:var(--gray);cursor:pointer}
+.modal-close:hover{color:var(--navy)}
+.modal h2{font-size:1.2rem;font-weight:900;margin-bottom:16px}
+.modal-tabs{display:flex;gap:6px;margin-bottom:18px}
+.mtab{flex:1;padding:7px;border:2px solid var(--border);border-radius:10px;background:none;
+  font-family:inherit;font-weight:800;font-size:.83rem;color:var(--gray);cursor:pointer;transition:all .15s}
+.mtab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:.77rem;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}
+.field input{width:100%;padding:10px 13px;border:2px solid var(--border);border-radius:11px;
+  font-family:'Fira Code',monospace;font-size:.92rem;outline:none;transition:border-color .15s;color:var(--navy)}
+.field input:focus{border-color:var(--navy)}
+.modal-err{color:var(--error);font-size:.82rem;font-weight:700;margin-bottom:10px;display:none}
+.modal-err.on{display:block}
+.modal-submit{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:12px;
+  font-family:inherit;font-weight:900;font-size:.95rem;cursor:pointer;transition:all .15s;margin-bottom:10px}
+.modal-submit:hover{background:var(--navy2)}
+.modal-submit:disabled{opacity:.5;cursor:not-allowed}
+.guest-link{text-align:center;font-size:.8rem;color:var(--gray);cursor:pointer;font-weight:700}
+.guest-link:hover{color:var(--navy)}
+
+/* ── USER DROPDOWN ───────────────────────────────────────── */
+.user-dropdown{position:absolute;top:54px;right:10px;background:#fff;border-radius:16px;
+  box-shadow:0 8px 32px rgba(26,31,94,.18);border:2px solid var(--border);padding:14px;
+  min-width:210px;z-index:200;display:none}
+.user-dropdown.on{display:block}
+.ud-name{font-weight:900;font-size:1rem;margin-bottom:2px}
+.ud-role{font-size:.72rem;color:var(--pink);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.ud-stats{margin:10px 0;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ud-stat{background:#f5f7ff;border-radius:10px;padding:8px;text-align:center;border:1.5px solid var(--border)}
+.ud-stat-num{font-weight:900;font-size:1.1rem;color:var(--navy)}
+.ud-stat-lbl{font-size:.68rem;color:var(--gray);font-weight:700}
+.ud-logout{width:100%;padding:8px;background:none;border:2px solid var(--border);border-radius:10px;
+  font-family:inherit;font-weight:800;font-size:.82rem;color:var(--gray);cursor:pointer;transition:all .15s}
+.ud-logout:hover{border-color:var(--error);color:var(--error)}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .rpanel{position:fixed;bottom:0;left:0;right:0;height:60vh;border-left:none;
+    border-top:2px solid var(--border);display:none;z-index:150}
+  .rpanel.mob-open{display:flex}
+  .chat-fab{display:flex;position:fixed;bottom:16px;right:16px;width:50px;height:50px;
+    background:var(--pink);border-radius:50%;align-items:center;justify-content:center;
+    color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 16px rgba(232,64,138,.4);z-index:160;border:none}
+}
+@media(min-width:769px){.chat-fab{display:none}}
+</style>
+</head>
+<body>
+
+<div class="pts-toast" id="ptsToast"></div>
+
+<!-- AUTH MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>⚗️ ChemNomen</h2>
+    <div class="modal-tabs">
+      <button class="mtab on" onclick="switchMTab('login')">Log in</button>
+      <button class="mtab" onclick="switchMTab('register')">Register</button>
+    </div>
+    <div class="modal-err" id="modalErr"></div>
+    <div class="field"><label>Username</label><input type="text" id="mUser" autocomplete="username" spellcheck="false"></div>
+    <div class="field"><label>Password</label><input type="password" id="mPass" autocomplete="current-password"></div>
+    <button class="modal-submit" id="mSubmit" onclick="submitAuth()">Log in</button>
+    <div class="guest-link" onclick="closeModal()">Continue as guest (no progress saved)</div>
+  </div>
+</div>
+
+<!-- USER DROPDOWN -->
+<div class="user-dropdown" id="userDropdown">
+  <div class="ud-name" id="udName">—</div>
+  <div class="ud-role" id="udRole">guest</div>
+  <div class="ud-stats">
+    <div class="ud-stat"><div class="ud-stat-num" id="udScore">0</div><div class="ud-stat-lbl">Total pts</div></div>
+    <div class="ud-stat"><div class="ud-stat-num" id="udCorrect">0/0</div><div class="ud-stat-lbl">Correct</div></div>
+  </div>
+  <button class="ud-logout" onclick="logout()">Sign out</button>
+</div>
+
+<header>
+  <div class="logo"><div class="logo-ico">⚗️</div>ChemNomen</div>
+  <div class="hdr-right">
+    <div class="hbadge" id="hdrScore" style="display:none">⭐ <span class="num" id="hdrScoreNum">0</span> pts</div>
+    <div class="hbadge" id="hdrSession">Session: <span class="num" id="sc">0/0</span></div>
+    <div class="hbadge" id="strkBadge" style="display:none">🔥 <span id="strkN">0</span></div>
+    <button class="login-btn" id="loginBtn" onclick="openModal()">Log in</button>
+    <button class="user-btn" id="userBtn" style="display:none" onclick="toggleDropdown()">
+      <div class="user-dot"></div><span id="userBtnName">user</span> ▾
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <div class="quiz">
+
+    <!-- MODE SWITCH -->
+    <div class="mode-switch">
+      <button class="mode-btn on" onclick="setMode('quiz')">🧪 Practice</button>
+      <button class="mode-btn" onclick="setMode('learn')">📖 Learn</button>
+    </div>
+
+    <!-- QUIZ AREA -->
+    <div id="quizArea">
+      <div class="filters" id="filterBar">
+        <button class="fbtn on" data-cat="all">All</button>
+        <button class="fbtn" data-cat="alkane">Alkanes</button>
+        <button class="fbtn" data-cat="alkene">Alkenes</button>
+        <button class="fbtn" data-cat="alkyne">Alkynes</button>
+        <button class="fbtn" data-cat="alcohol">Alcohols</button>
+        <button class="fbtn" data-cat="aldehyde">Aldehydes</button>
+        <button class="fbtn" data-cat="ketone">Ketones</button>
+        <button class="fbtn" data-cat="carboxylic acid">Acids</button>
+        <button class="fbtn" data-cat="amine">Amines</button>
+        <button class="fbtn" data-cat="amide">Amides</button>
+        <button class="fbtn" data-cat="aromatic">Aromatics</button>
+      </div>
+
+      <div class="card" id="mainCard">
+        <div class="img-wrap">
+          <div class="img-loader" id="imgLdr"></div>
+          <img id="structImg" alt="Chemical structure">
+          <div class="img-err" id="imgErr" style="display:none">⚠ Structure unavailable</div>
+          <div class="cat-badge" id="catBadge">—</div>
+          <div class="diff-badge" id="diffBadge">—</div>
+        </div>
+        <div class="card-body">
+          <div class="attempts">
+            <span class="att-lbl">Attempts</span>
+            <div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+          </div>
+          <div class="ans-row">
+            <input type="text" id="ansInput" placeholder="Type the IUPAC name…" autocomplete="off" spellcheck="false">
+            <button class="sub-btn" id="subBtn" onclick="submit()">Submit ↵</button>
+          </div>
+          <div class="fb" id="fbMsg"></div>
+          <div class="reveal" id="revPanel">
+            <div class="reveal-lbl">✨ Answer &amp; Naming Steps</div>
+            <div class="reveal-name" id="revName"></div>
+            <ul class="steps-list" id="stepsUl"></ul>
+          </div>
+          <button class="next-btn" id="nextBtn" onclick="nextQ()">Next Compound →</button>
+        </div>
+      </div>
+      <div class="empty" id="emptyMsg"><div style="font-size:2rem;margin-bottom:8px">🧪</div>
+        <strong>No compounds in this category.</strong><br>Choose a different filter.</div>
+    </div>
+
+    <!-- LEARN AREA -->
+    <div id="learnPanel">
+      <div class="learn-grid" id="learnGrid"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="rpanel" id="rpanel">
+    <div class="panel-tabs">
+      <button class="ptab on" onclick="switchTab('chat')">💬 ChemBot</button>
+      <button class="ptab" onclick="switchTab('lb')">🏆 Leaderboard</button>
+    </div>
+    <div class="panel-body" id="chatBody">
+      <div class="chat-hdr">
+        <div class="bot-ava">🤖</div>
+        <div><div class="chat-title">ChemBot</div><div class="chat-sub" id="botSub">Powered by Groq · llama-3.3-70b</div></div>
+      </div>
+      <div class="msgs" id="msgs"></div>
+      <div class="typing" id="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>
+      <div class="chat-foot">
+        <textarea id="chatIn" rows="1" placeholder="Ask about naming rules…" onkeydown="chatKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendChat()">Send</button>
+      </div>
+    </div>
+    <div class="panel-body" id="lbBody" style="display:none">
+      <div class="lb-wrap">
+        <div class="lb-title">🏆 Top Players
+          <button class="lb-refresh" onclick="loadLeaderboard()">↻</button>
+        </div>
+        <div id="lbContent"><div class="lb-empty">Loading…</div></div>
+        <div class="lb-login-hint" id="lbHint" style="display:none">
+          <strong>Log in</strong> to save your score and appear here!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="chat-fab" onclick="toggleRpanel()">💬</button>
+
+<script>
+// ══════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════
+const DIFF = {
+  alkane:           {label:'Easy',   pts:10, color:'#22c55e'},
+  alkene:           {label:'Medium', pts:15, color:'#f59e0b'},
+  alkyne:           {label:'Medium', pts:15, color:'#f59e0b'},
+  alcohol:          {label:'Medium', pts:15, color:'#f59e0b'},
+  aldehyde:         {label:'Hard',   pts:20, color:'#ef4444'},
+  ketone:           {label:'Hard',   pts:20, color:'#ef4444'},
+  'carboxylic acid':{label:'Hard',   pts:20, color:'#ef4444'},
+  amine:            {label:'Expert', pts:25, color:'#8b5cf6'},
+  amide:            {label:'Expert', pts:25, color:'#8b5cf6'},
+  aromatic:         {label:'Hard',   pts:20, color:'#ef4444'},
+};
+const MULT = [1.0, 0.6, 0.3];
+function calcPts(cat,att){ return Math.round((DIFF[cat]?.pts||10)*(MULT[att-1]||0)); }
+
+const STEPS = {
+  alkane:['Find the longest continuous carbon chain → parent name (meth/eth/prop/but/pent/hex/hept/oct…)','Number carbons from the end CLOSEST to substituents (lowest locant rule)','Name each substituent: [position]-[group]yl (e.g. 2-methyl, 3-ethyl)','Use multiplying prefixes for repeated groups: di-, tri-, tetra-… Ignore these when alphabetizing','List substituents alphabetically then append parent chain name + -ane'],
+  alkene:['Find the longest chain CONTAINING the C=C double bond','Number from the end CLOSEST to the double bond','Change -ane to -ene; place the double-bond locant before -ene (e.g. but-2-ene)','Ethene and propene need no locant (only one possible position each)','Add substituents with locants alphabetically as usual'],
+  alkyne:['Find the longest chain CONTAINING the C≡C triple bond','Number from the end CLOSEST to the triple bond','Change -ane to -yne; place the locant before -yne (e.g. but-2-yne)','Ethyne needs no locant (only 2 carbons)','Add substituents alphabetically with locants'],
+  alcohol:['Find the longest chain CONTAINING the –OH group','Number from the end CLOSEST to –OH (lowest locant)','Replace final -e of alkane name with -ol; insert –OH locant before -ol (e.g. propan-2-ol)','Methanol and ethanol need no locant','Priority when other groups present: –COOH > –CHO > C=O > –OH'],
+  aldehyde:['Identify the –CHO group — it is ALWAYS carbon #1','Count all carbons including the carbonyl carbon','Replace final -e with -al (3C → propanal)','No locant needed — the carbonyl is always at C1','Common names: methanal = formaldehyde, ethanal = acetaldehyde'],
+  ketone:['Identify the C=O NOT at the chain end (end = aldehyde; middle = ketone)','Find the longest chain containing C=O','Number to give C=O the LOWEST locant','Replace final -e with -one; place locant before -one (e.g. pentan-3-one)','Propanone (3C) needs no locant — only one possible position'],
+  'carboxylic acid':['Identify the –COOH group — it is ALWAYS carbon #1','Count all carbons including the carboxyl carbon','Replace final -e with -oic acid (3C → propanoic acid)','The word "acid" always comes at the very end','Common names: methanoic = formic acid, ethanoic = acetic acid'],
+  amine:['Identify the N group: –NH₂ (primary), –NH– (secondary), –N< (tertiary)','Primary amines: parent chain + -amine; number from end closest to –NH₂','Secondary/tertiary: longest chain is parent; other N-groups get N- prefix','Example: CH₃NH₂ → methanamine; (CH₃)₂NH → N-methylmethanamine','Aniline and aromatic amines retain their IUPAC common names'],
+  amide:['Identify the –CONH₂ group — it is ALWAYS carbon #1','Count all carbons including the carbonyl carbon','Replace -ic acid (or final -e) with -amide (2C → ethanamide)','No locant needed — the amide is always at C1','Common names: methanamide = formamide, ethanamide = acetamide'],
+  aromatic:['Identify the benzene ring as the parent structure','One substituent: [substituent]benzene (e.g. methylbenzene, chlorobenzene)','Two substituents: number the ring for lowest locants (or use ortho-/meta-/para-)','Retained IUPAC names: toluene → methylbenzene; aniline stays aniline','Common prefixes: methyl-, ethyl-, chloro-, bromo-, nitro-, amino-'],
+};
+
+const LEARN_DATA = [
+  {
+    cat:'alkane', icon:'🔗', title:'Alkanes',
+    what:'Saturated hydrocarbons — only C–C single bonds. General formula: CₙH₂ₙ₊₂. They are the simplest organic compounds and the base for all other naming.',
+    pattern:'[locants of substituents]-[substituent names]-[parent chain]-ane',
+    examples:[
+      {struct:'CH₄',name:'methane'},{struct:'CH₃CH₃',name:'ethane'},
+      {struct:'CH₃CH₂CH₃',name:'propane'},{struct:'CH₃CH(CH₃)CH₃',name:'2-methylpropane'},
+      {struct:'(CH₃)₃CCH₂CH₃',name:'2,2-dimethylbutane'},
+    ]
+  },
+  {
+    cat:'alkene', icon:'⚡', title:'Alkenes',
+    what:'Contain at least one C=C double bond. General formula: CₙH₂ₙ (for one double bond). The double bond makes them more reactive than alkanes.',
+    pattern:'[substituents]-[parent chain]-[locant]-ene',
+    examples:[
+      {struct:'CH₂=CH₂',name:'ethene'},{struct:'CH₂=CHCH₃',name:'propene'},
+      {struct:'CH₂=CHCH₂CH₃',name:'but-1-ene'},{struct:'CH₃CH=CHCH₃',name:'but-2-ene'},
+      {struct:'CH₂=C(CH₃)₂',name:'2-methylpropene'},
+    ]
+  },
+  {
+    cat:'alkyne', icon:'⚗️', title:'Alkynes',
+    what:'Contain at least one C≡C triple bond. General formula: CₙH₂ₙ₋₂ (for one triple bond). More reactive than alkenes.',
+    pattern:'[substituents]-[parent chain]-[locant]-yne',
+    examples:[
+      {struct:'CH≡CH',name:'ethyne'},{struct:'CH≡CCH₃',name:'propyne'},
+      {struct:'CH≡CCH₂CH₃',name:'but-1-yne'},{struct:'CH₃C≡CCH₃',name:'but-2-yne'},
+      {struct:'CH≡CCH₂CH₂CH₃',name:'pent-1-yne'},
+    ]
+  },
+  {
+    cat:'alcohol', icon:'🍶', title:'Alcohols',
+    what:'Contain the hydroxyl group –OH attached to a carbon chain. They are considered derivatives of water where one H is replaced by an alkyl group.',
+    pattern:'[substituents]-[parent chain]-[locant]-ol',
+    examples:[
+      {struct:'CH₃OH',name:'methanol'},{struct:'CH₃CH₂OH',name:'ethanol'},
+      {struct:'CH₃CH₂CH₂OH',name:'propan-1-ol'},{struct:'CH₃CH(OH)CH₃',name:'propan-2-ol'},
+      {struct:'(CH₃)₃COH',name:'2-methylpropan-2-ol'},
+    ]
+  },
+  {
+    cat:'aldehyde', icon:'🟡', title:'Aldehydes',
+    what:'Contain the carbonyl group –CHO at the END of the carbon chain. The carbonyl carbon is always C1, so no locant is needed.',
+    pattern:'[parent chain]-al',
+    examples:[
+      {struct:'HCHO',name:'methanal'},{struct:'CH₃CHO',name:'ethanal'},
+      {struct:'CH₃CH₂CHO',name:'propanal'},{struct:'CH₃CH₂CH₂CHO',name:'butanal'},
+      {struct:'CH₃(CH₂)₃CHO',name:'pentanal'},
+    ]
+  },
+  {
+    cat:'ketone', icon:'🔴', title:'Ketones',
+    what:'Contain the carbonyl group C=O in the MIDDLE of the chain (not at an end). The simplest ketone is propanone (acetone) with 3 carbons.',
+    pattern:'[parent chain]-[locant]-one',
+    examples:[
+      {struct:'CH₃COCH₃',name:'propanone'},{struct:'CH₃COCH₂CH₃',name:'butan-2-one'},
+      {struct:'CH₃CH₂COCH₂CH₃',name:'pentan-3-one'},{struct:'CH₃CO(CH₂)₂CH₃',name:'pentan-2-one'},
+      {struct:'CH₃CO(CH₂)₃CH₃',name:'hexan-2-one'},
+    ]
+  },
+  {
+    cat:'carboxylic acid', icon:'🧪', title:'Carboxylic Acids',
+    what:'Contain the carboxyl group –COOH at the end of the chain. The –COOH carbon is always C1. They are the highest-priority functional group in IUPAC naming.',
+    pattern:'[parent chain]-oic acid',
+    examples:[
+      {struct:'HCOOH',name:'methanoic acid'},{struct:'CH₃COOH',name:'ethanoic acid'},
+      {struct:'CH₃CH₂COOH',name:'propanoic acid'},{struct:'CH₃(CH₂)₂COOH',name:'butanoic acid'},
+      {struct:'CH₃(CH₂)₃COOH',name:'pentanoic acid'},
+    ]
+  },
+  {
+    cat:'amine', icon:'🟣', title:'Amines',
+    what:'Contain nitrogen. Primary (–NH₂), secondary (–NH–), or tertiary (–N<). Primary amines are named by adding -amine to the parent chain. Secondary/tertiary amines use the N- prefix for extra groups on nitrogen.',
+    pattern:'[parent chain]-[locant]-amine  /  N-[group]-[parent]-amine',
+    examples:[
+      {struct:'CH₃NH₂',name:'methanamine'},{struct:'CH₃CH₂NH₂',name:'ethanamine'},
+      {struct:'CH₃CH₂CH₂NH₂',name:'propan-1-amine'},{struct:'(CH₃)₂NH',name:'N-methylmethanamine'},
+      {struct:'C₆H₅NH₂',name:'aniline'},
+    ]
+  },
+  {
+    cat:'amide', icon:'🔵', title:'Amides',
+    what:'Contain the group –CONH₂ (or –CONHR, –CONR₂). Derived from carboxylic acids by replacing –OH with –NH₂. The carbonyl carbon is always C1.',
+    pattern:'[parent chain]-amide',
+    examples:[
+      {struct:'HCONH₂',name:'methanamide'},{struct:'CH₃CONH₂',name:'ethanamide'},
+      {struct:'CH₃CH₂CONH₂',name:'propanamide'},{struct:'C₆H₅CONH₂',name:'benzamide'},
+    ]
+  },
+  {
+    cat:'aromatic', icon:'⬡', title:'Aromatic Compounds',
+    what:'Based on the benzene ring (C₆H₆) — 6 carbons with alternating double bonds. Benzene is the parent; substituents are named as prefixes. Two substituents can use number locants or ortho- (1,2), meta- (1,3), para- (1,4).',
+    pattern:'[substituent]benzene  /  [locant]-[sub₁]-[locant]-[sub₂]-benzene',
+    examples:[
+      {struct:'C₆H₆',name:'benzene'},{struct:'C₆H₅CH₃',name:'methylbenzene'},
+      {struct:'C₆H₅CH₂CH₃',name:'ethylbenzene'},{struct:'C₆H₅Cl',name:'chlorobenzene'},
+      {struct:'C₆H₅NO₂',name:'nitrobenzene'},
+    ]
+  },
+];
+
+const DB = [
+  {id:1,iupac:'propane',look:'propane',acc:['propane'],cat:'alkane'},
+  {id:2,iupac:'butane',look:'butane',acc:['butane'],cat:'alkane'},
+  {id:3,iupac:'pentane',look:'pentane',acc:['pentane'],cat:'alkane'},
+  {id:4,iupac:'hexane',look:'hexane',acc:['hexane'],cat:'alkane'},
+  {id:5,iupac:'2-methylpropane',look:'isobutane',acc:['2-methylpropane','isobutane'],cat:'alkane'},
+  {id:6,iupac:'2-methylbutane',look:'isopentane',acc:['2-methylbutane','isopentane'],cat:'alkane'},
+  {id:7,iupac:'2,2-dimethylpropane',look:'neopentane',acc:['2,2-dimethylpropane','neopentane'],cat:'alkane'},
+  {id:8,iupac:'2,3-dimethylbutane',look:'2,3-dimethylbutane',acc:['2,3-dimethylbutane'],cat:'alkane'},
+  {id:9,iupac:'3-methylpentane',look:'3-methylpentane',acc:['3-methylpentane'],cat:'alkane'},
+  {id:10,iupac:'2-methylpentane',look:'2-methylpentane',acc:['2-methylpentane','isohexane'],cat:'alkane'},
+  {id:11,iupac:'2,2-dimethylbutane',look:'2,2-dimethylbutane',acc:['2,2-dimethylbutane'],cat:'alkane'},
+  {id:12,iupac:'ethene',look:'ethylene',acc:['ethene','ethylene'],cat:'alkene'},
+  {id:13,iupac:'propene',look:'propylene',acc:['propene','propylene'],cat:'alkene'},
+  {id:14,iupac:'but-1-ene',look:'1-butene',acc:['but-1-ene','1-butene'],cat:'alkene'},
+  {id:15,iupac:'but-2-ene',look:'2-butene',acc:['but-2-ene','2-butene'],cat:'alkene'},
+  {id:16,iupac:'2-methylpropene',look:'isobutylene',acc:['2-methylpropene','2-methyl-1-propene','isobutylene','isobutene'],cat:'alkene'},
+  {id:17,iupac:'pent-1-ene',look:'1-pentene',acc:['pent-1-ene','1-pentene'],cat:'alkene'},
+  {id:18,iupac:'3-methylbut-1-ene',look:'3-methyl-1-butene',acc:['3-methylbut-1-ene','3-methyl-1-butene'],cat:'alkene'},
+  {id:19,iupac:'2-methylbut-2-ene',look:'2-methyl-2-butene',acc:['2-methylbut-2-ene','2-methyl-2-butene'],cat:'alkene'},
+  {id:20,iupac:'ethyne',look:'acetylene',acc:['ethyne','acetylene'],cat:'alkyne'},
+  {id:21,iupac:'propyne',look:'methylacetylene',acc:['propyne','prop-1-yne','methylacetylene'],cat:'alkyne'},
+  {id:22,iupac:'but-1-yne',look:'1-butyne',acc:['but-1-yne','1-butyne'],cat:'alkyne'},
+  {id:23,iupac:'but-2-yne',look:'2-butyne',acc:['but-2-yne','2-butyne'],cat:'alkyne'},
+  {id:24,iupac:'pent-1-yne',look:'1-pentyne',acc:['pent-1-yne','1-pentyne'],cat:'alkyne'},
+  {id:25,iupac:'methanol',look:'methanol',acc:['methanol'],cat:'alcohol'},
+  {id:26,iupac:'ethanol',look:'ethanol',acc:['ethanol'],cat:'alcohol'},
+  {id:27,iupac:'propan-1-ol',look:'1-propanol',acc:['propan-1-ol','1-propanol'],cat:'alcohol'},
+  {id:28,iupac:'propan-2-ol',look:'2-propanol',acc:['propan-2-ol','2-propanol','isopropanol'],cat:'alcohol'},
+  {id:29,iupac:'butan-1-ol',look:'1-butanol',acc:['butan-1-ol','1-butanol'],cat:'alcohol'},
+  {id:30,iupac:'butan-2-ol',look:'2-butanol',acc:['butan-2-ol','2-butanol'],cat:'alcohol'},
+  {id:31,iupac:'2-methylpropan-1-ol',look:'isobutanol',acc:['2-methylpropan-1-ol','2-methyl-1-propanol','isobutanol'],cat:'alcohol'},
+  {id:32,iupac:'2-methylpropan-2-ol',look:'tert-butanol',acc:['2-methylpropan-2-ol','2-methyl-2-propanol','tert-butanol'],cat:'alcohol'},
+  {id:33,iupac:'methanal',look:'formaldehyde',acc:['methanal','formaldehyde'],cat:'aldehyde'},
+  {id:34,iupac:'ethanal',look:'acetaldehyde',acc:['ethanal','acetaldehyde'],cat:'aldehyde'},
+  {id:35,iupac:'propanal',look:'propanal',acc:['propanal','propionaldehyde'],cat:'aldehyde'},
+  {id:36,iupac:'butanal',look:'butanal',acc:['butanal','butyraldehyde'],cat:'aldehyde'},
+  {id:37,iupac:'pentanal',look:'pentanal',acc:['pentanal'],cat:'aldehyde'},
+  {id:38,iupac:'propanone',look:'acetone',acc:['propanone','acetone'],cat:'ketone'},
+  {id:39,iupac:'butan-2-one',look:'methyl ethyl ketone',acc:['butan-2-one','butanone','2-butanone','methyl ethyl ketone'],cat:'ketone'},
+  {id:40,iupac:'pentan-2-one',look:'methyl propyl ketone',acc:['pentan-2-one','2-pentanone','methyl propyl ketone'],cat:'ketone'},
+  {id:41,iupac:'pentan-3-one',look:'diethyl ketone',acc:['pentan-3-one','3-pentanone','diethyl ketone'],cat:'ketone'},
+  {id:42,iupac:'hexan-2-one',look:'methyl butyl ketone',acc:['hexan-2-one','2-hexanone','methyl butyl ketone'],cat:'ketone'},
+  {id:43,iupac:'methanoic acid',look:'formic acid',acc:['methanoic acid','formic acid'],cat:'carboxylic acid'},
+  {id:44,iupac:'ethanoic acid',look:'acetic acid',acc:['ethanoic acid','acetic acid'],cat:'carboxylic acid'},
+  {id:45,iupac:'propanoic acid',look:'propionic acid',acc:['propanoic acid','propionic acid'],cat:'carboxylic acid'},
+  {id:46,iupac:'butanoic acid',look:'butyric acid',acc:['butanoic acid','butyric acid'],cat:'carboxylic acid'},
+  {id:47,iupac:'pentanoic acid',look:'valeric acid',acc:['pentanoic acid','valeric acid'],cat:'carboxylic acid'},
+  {id:48,iupac:'methanamine',look:'methylamine',acc:['methanamine','methylamine'],cat:'amine'},
+  {id:49,iupac:'ethanamine',look:'ethylamine',acc:['ethanamine','ethylamine'],cat:'amine'},
+  {id:50,iupac:'propan-1-amine',look:'propylamine',acc:['propan-1-amine','1-propylamine','propylamine'],cat:'amine'},
+  {id:51,iupac:'propan-2-amine',look:'isopropylamine',acc:['propan-2-amine','2-propylamine','isopropylamine'],cat:'amine'},
+  {id:52,iupac:'N-methylmethanamine',look:'dimethylamine',acc:['n-methylmethanamine','dimethylamine'],cat:'amine'},
+  {id:53,iupac:'aniline',look:'aniline',acc:['aniline','phenylamine','aminobenzene'],cat:'amine'},
+  {id:54,iupac:'methanamide',look:'formamide',acc:['methanamide','formamide'],cat:'amide'},
+  {id:55,iupac:'ethanamide',look:'acetamide',acc:['ethanamide','acetamide'],cat:'amide'},
+  {id:56,iupac:'propanamide',look:'propanamide',acc:['propanamide'],cat:'amide'},
+  {id:57,iupac:'benzamide',look:'benzamide',acc:['benzamide'],cat:'amide'},
+  {id:58,iupac:'benzene',look:'benzene',acc:['benzene'],cat:'aromatic'},
+  {id:59,iupac:'methylbenzene',look:'toluene',acc:['methylbenzene','toluene'],cat:'aromatic'},
+  {id:60,iupac:'ethylbenzene',look:'ethylbenzene',acc:['ethylbenzene'],cat:'aromatic'},
+  {id:61,iupac:'chlorobenzene',look:'chlorobenzene',acc:['chlorobenzene'],cat:'aromatic'},
+  {id:62,iupac:'nitrobenzene',look:'nitrobenzene',acc:['nitrobenzene'],cat:'aromatic'},
+  {id:63,iupac:'styrene',look:'styrene',acc:['styrene','vinylbenzene','ethenylbenzene'],cat:'aromatic'},
+];
+
+// ══════════════════════════════════════════════════
+//  AUTH STATE
+// ══════════════════════════════════════════════════
+const UK='chemnomen_user';
+let AUTH=JSON.parse(localStorage.getItem(UK)||'null');
+function isLoggedIn(){return!!AUTH;}
+function saveAuth(d){AUTH=d;localStorage.setItem(UK,JSON.stringify(d));}
+function logout(){AUTH=null;localStorage.removeItem(UK);renderAuthUI();closeDropdown();}
+
+let mTab='login';
+function openModal(){document.getElementById('modalBg').classList.add('on');}
+function closeModal(){document.getElementById('modalBg').classList.remove('on');}
+function closeModalOnBg(e){if(e.target===document.getElementById('modalBg'))closeModal();}
+function switchMTab(t){
+  mTab=t;
+  document.querySelectorAll('.mtab').forEach((b,i)=>b.classList.toggle('on',(i===0&&t==='login')||(i===1&&t==='register')));
+  document.getElementById('mSubmit').textContent=t==='login'?'Log in':'Create account';
+  document.getElementById('modalErr').classList.remove('on');
+}
+async function submitAuth(){
+  const username=document.getElementById('mUser').value.trim();
+  const password=document.getElementById('mPass').value;
+  const errEl=document.getElementById('modalErr');
+  const btn=document.getElementById('mSubmit');
+  if(!username||!password){errEl.textContent='Fill in both fields';errEl.classList.add('on');return;}
+  btn.disabled=true;btn.textContent='…';
+  try{
+    const res=await fetch('/.netlify/functions/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:mTab,username,password})});
+    const data=await res.json();
+    if(!res.ok){errEl.textContent=data.error||'Error';errEl.classList.add('on');return;}
+    saveAuth({...data});renderAuthUI();closeModal();
+  }catch(e){errEl.textContent='Network error — try again';errEl.classList.add('on');}
+  finally{btn.disabled=false;btn.textContent=mTab==='login'?'Log in':'Create account';}
+}
+document.getElementById('mPass').addEventListener('keydown',e=>{if(e.key==='Enter')submitAuth();});
+document.getElementById('mUser').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('mPass').focus();});
+
+function renderAuthUI(){
+  const show=isLoggedIn();
+  document.getElementById('loginBtn').style.display=show?'none':'flex';
+  document.getElementById('userBtn').style.display=show?'flex':'none';
+  document.getElementById('hdrScore').style.display=show?'flex':'none';
+  if(show){
+    document.getElementById('userBtnName').textContent=AUTH.username;
+    document.getElementById('hdrScoreNum').textContent=AUTH.score||0;
+    document.getElementById('udName').textContent=AUTH.username;
+    document.getElementById('udRole').textContent=AUTH.role==='admin'?'👑 admin':'student';
+    document.getElementById('udScore').textContent=AUTH.score||0;
+    document.getElementById('udCorrect').textContent=`${AUTH.correct||0}/${AUTH.total||0}`;
+  }
+  const hint=document.getElementById('lbHint');
+  if(hint)hint.style.display=show?'none':'block';
+}
+function toggleDropdown(){document.getElementById('userDropdown').classList.toggle('on');}
+function closeDropdown(){document.getElementById('userDropdown').classList.remove('on');}
+document.addEventListener('click',e=>{if(!e.target.closest('#userBtn')&&!e.target.closest('#userDropdown'))closeDropdown();});
+
+// ══════════════════════════════════════════════════
+//  MODE SWITCHER
+// ══════════════════════════════════════════════════
+let currentMode='quiz';
+function setMode(m){
+  currentMode=m;
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',(i===0&&m==='quiz')||(i===1&&m==='learn')));
+  document.getElementById('quizArea').style.display=m==='quiz'?'flex':'none';
+  document.getElementById('quizArea').style.flexDirection='column';
+  document.getElementById('quizArea').style.gap='16px';
+  document.getElementById('learnPanel').classList.toggle('on',m==='learn');
+  if(m==='learn')buildLearnCards();
+}
+
+// ══════════════════════════════════════════════════
+//  LEARN MODE
+// ══════════════════════════════════════════════════
+function buildLearnCards(){
+  const grid=document.getElementById('learnGrid');
+  if(grid.children.length>0)return; // already built
+  grid.innerHTML=LEARN_DATA.map(d=>{
+    const diff=DIFF[d.cat];
+    const steps=STEPS[d.cat]||[];
+    return `<div class="learn-card" onclick="toggleLearnCard(this)">
+      <div class="lc-header">
+        <div class="lc-left">
+          <div class="lc-icon" style="background:${diff.color}22;color:${diff.color}">${d.icon}</div>
+          <div>
+            <div class="lc-name">${d.title}</div>
+            <div class="lc-diff" style="background:${diff.color}">${diff.label} · ${diff.pts} pts</div>
+          </div>
+        </div>
+        <span class="lc-arrow">▶</span>
+      </div>
+      <div class="lc-body">
+        <div class="lc-what">${d.what}</div>
+        <div class="lc-steps-title">📋 Naming Steps</div>
+        <ul class="lc-steps">
+          ${steps.map((s,i)=>`<li class="lc-step"><div class="lc-snum">${i+1}</div><span>${s}</span></li>`).join('')}
+        </ul>
+        <div class="lc-pattern">🔑 Pattern: <span class="lc-formula">${d.pattern}</span></div>
+        <div class="lc-examples-title" style="margin-top:12px">💡 Examples</div>
+        <div class="lc-examples">
+          ${d.examples.map(ex=>`<div class="lc-ex">
+            <span class="lc-ex-struct">${ex.struct}</span>
+            <span class="lc-ex-name">${ex.name}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleLearnCard(el){el.classList.toggle('open');}
+
+// ══════════════════════════════════════════════════
+//  QUIZ
+// ══════════════════════════════════════════════════
+let S={compound:null,attempts:0,revealed:false,done:false,score:{ok:0,tot:0},streak:0,usedIds:new Set(),filter:'all',chatHist:[],chatBusy:false};
+const norm=s=>s.toLowerCase().trim().replace(/\s+/g,'').replace(/[–—]/g,'-');
+const check=(inp,c)=>c.acc.some(a=>norm(a)===norm(inp));
+const pubUrl=lk=>`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(lk)}/PNG?image_size=300x300`;
+const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b;};
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+
+function filtered(){return S.filter==='all'?DB:DB.filter(c=>c.cat===S.filter);}
+function nextCompound(){let pool=filtered().filter(c=>!S.usedIds.has(c.id));if(!pool.length){S.usedIds=new Set();pool=filtered();}return pool.length?shuffle(pool)[0]:null;}
+
+function loadCompound(c){
+  S.compound=c;S.attempts=0;S.revealed=false;S.done=false;S.usedIds.add(c.id);
+  const d=DIFF[c.cat]||DIFF.alkane;
+  document.getElementById('catBadge').textContent=c.cat.charAt(0).toUpperCase()+c.cat.slice(1);
+  const db=document.getElementById('diffBadge');db.textContent=`${d.label} · ${d.pts}pts`;db.style.background=d.color;
+  ['d1','d2','d3'].forEach(id=>document.getElementById(id).className='dot');
+  const inp=document.getElementById('ansInput');inp.value='';inp.className='';inp.disabled=false;
+  const fb=document.getElementById('fbMsg');fb.className='fb';fb.textContent='';
+  document.getElementById('revPanel').className='reveal';
+  document.getElementById('nextBtn').className='next-btn';
+  document.getElementById('subBtn').disabled=false;
+  document.getElementById('mainCard').style.display='';
+  document.getElementById('emptyMsg').style.display='none';
+  loadImg(c);setTimeout(()=>inp.focus(),80);
+}
+
+function loadImg(c){
+  const img=document.getElementById('structImg'),ldr=document.getElementById('imgLdr'),err=document.getElementById('imgErr');
+  img.style.display='none';err.style.display='none';ldr.style.display='block';
+  img.onload=()=>{ldr.style.display='none';img.style.display='block';};
+  img.onerror=()=>{ldr.style.display='none';err.style.display='block';};
+  img.src=pubUrl(c.look);
+}
+
+function submit(){
+  if(S.revealed||S.done)return;
+  const inp=document.getElementById('ansInput');const val=inp.value.trim();if(!val)return;
+  if(check(val,S.compound)){
+    inp.className='ok';
+    const pts=calcPts(S.compound.cat,S.attempts+1);
+    showFb(true,pts);showToast(`+${pts} pts`);
+    S.score.ok++;S.score.tot++;S.streak++;S.done=true;
+    document.getElementById('subBtn').disabled=true;
+    document.getElementById('nextBtn').className='next-btn on';
+    postProgress(true,pts);updScore();
+  }else{
+    S.attempts++;
+    const dots=['d1','d2','d3'];
+    if(S.attempts<=3)document.getElementById(dots[S.attempts-1]).classList.add('bad');
+    inp.className='bad';
+    if(S.attempts>=3){
+      showFb(false,0,true);revealAnswer();
+      S.revealed=true;S.streak=0;S.score.tot++;
+      document.getElementById('subBtn').disabled=true;
+      document.getElementById('nextBtn').className='next-btn on';
+      postProgress(false,0);
+    }else{
+      showFb(false,0,false);
+      setTimeout(()=>{if(!S.revealed){inp.className='';document.getElementById('fbMsg').className='fb';inp.value='';inp.focus();}},1500);
+    }
+    updScore();
+  }
+}
+
+function showFb(ok,pts,final=false){
+  const el=document.getElementById('fbMsg');
+  if(ok){el.innerHTML=`✅ Correct! "${S.compound.iupac}"${pts>0?` · <strong>+${pts} pts</strong>`:''}`;el.className='fb ok';}
+  else if(final){el.textContent='❌ 3 attempts used. See the answer and steps below.';el.className='fb bad';}
+  else{const left=3-S.attempts;el.textContent=`❌ Incorrect — ${left} attempt${left===1?'':'s'} remaining.`;el.className='fb bad';}
+}
+
+function revealAnswer(){
+  document.getElementById('revName').textContent=S.compound.iupac;
+  document.getElementById('stepsUl').innerHTML=(STEPS[S.compound.cat]||[]).map((s,i)=>`<li class="step"><div class="snum">${i+1}</div><span>${esc(s)}</span></li>`).join('');
+  document.getElementById('revPanel').className='reveal on';
+}
+
+function nextQ(){const c=nextCompound();if(c)loadCompound(c);else{document.getElementById('mainCard').style.display='none';document.getElementById('emptyMsg').style.display='block';}}
+function updScore(){
+  document.getElementById('sc').textContent=`${S.score.ok}/${S.score.tot}`;
+  const sb=document.getElementById('strkBadge');
+  if(S.streak>=2){sb.style.display='flex';document.getElementById('strkN').textContent=S.streak;}else sb.style.display='none';
+}
+function showToast(msg){const t=document.getElementById('ptsToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+
+async function postProgress(correct,points){
+  if(!isLoggedIn())return;
+  try{
+    const res=await fetch('/.netlify/functions/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:AUTH.token,correct,points,category:S.compound.cat})});
+    const data=await res.json();
+    if(data.score!==undefined&&AUTH){AUTH.score=data.score;AUTH.correct=data.correct;AUTH.total=data.total;localStorage.setItem(UK,JSON.stringify(AUTH));document.getElementById('hdrScoreNum').textContent=AUTH.score;document.getElementById('udScore').textContent=AUTH.score;document.getElementById('udCorrect').textContent=`${AUTH.correct}/${AUTH.total}`;}
+  }catch(e){}
+}
+
+document.getElementById('filterBar').addEventListener('click',e=>{
+  const btn=e.target.closest('.fbtn');if(!btn)return;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');S.filter=btn.dataset.cat;S.usedIds=new Set();
+  const c=nextCompound();
+  if(c)loadCompound(c);else{document.getElementById('mainCard').style.display='none';document.getElementById('emptyMsg').style.display='block';}
+});
+document.getElementById('ansInput').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+
+// ══════════════════════════════════════════════════
+//  PANEL TABS
+// ══════════════════════════════════════════════════
+function switchTab(tab){
+  document.querySelectorAll('.ptab').forEach((b,i)=>b.classList.toggle('on',(i===0&&tab==='chat')||(i===1&&tab==='lb')));
+  document.getElementById('chatBody').style.display=tab==='chat'?'flex':'none';
+  document.getElementById('lbBody').style.display=tab==='lb'?'flex':'none';
+  if(tab==='lb')loadLeaderboard();
+}
+
+// ══════════════════════════════════════════════════
+//  LEADERBOARD
+// ══════════════════════════════════════════════════
+async function loadLeaderboard(){
+  const el=document.getElementById('lbContent');el.innerHTML='<div class="lb-empty">Loading…</div>';
+  try{
+    const res=await fetch('/.netlify/functions/progress');
+    const data=await res.json();
+    const board=data.leaderboard||[];
+    if(!board.length){el.innerHTML='<div class="lb-empty">No scores yet — be the first!</div>';return;}
+    const rankCls=['gold','silver','bronze'];
+    el.innerHTML=board.map((row,i)=>{
+      const me=AUTH&&row.name===AUTH.username?' me':'';
+      const pct=row.total?Math.round(100*row.correct/row.total):0;
+      return `<div class="lb-row${me}"><div class="lb-rank ${rankCls[i]||''}">${i<3?['🥇','🥈','🥉'][i]:i+1}</div><div class="lb-name">${esc(row.name)}${me?' (you)':''}</div><div class="lb-stats">${pct}% correct</div><div class="lb-score">${row.score} pts</div></div>`;
+    }).join('');
+    document.getElementById('lbHint').style.display=isLoggedIn()?'none':'block';
+  }catch(e){el.innerHTML='<div class="lb-empty">Could not load leaderboard.</div>';}
+}
+
+// ══════════════════════════════════════════════════
+//  CHATBOT
+// ══════════════════════════════════════════════════
+function addMsg(role,txt){
+  const el=document.getElementById('msgs');const div=document.createElement('div');
+  div.className=`msg ${role}`;if(role==='b')div.innerHTML=esc(txt);else div.textContent=txt;
+  el.appendChild(div);el.scrollTop=el.scrollHeight;
+}
+
+async function sendChat(){
+  if(S.chatBusy)return;
+  const ta=document.getElementById('chatIn');const msg=ta.value.trim();if(!msg)return;
+  ta.value='';addMsg('u',msg);
+  const c=S.compound;
+  const learnCtx=currentMode==='learn'?'\n\nThe student is currently in Learn Mode, browsing naming rules. Help them understand concepts and ask follow-up questions.':'';
+  const sys=c&&currentMode==='quiz'
+    ?`You are ChemBot, an expert organic chemistry tutor specializing in IUPAC nomenclature.
+The student is practicing naming organic compounds. Current category: "${c.cat}".
+${S.revealed||S.done?`The answer is revealed: "${c.iupac}". Walk through exactly WHY this name is correct for this compound.`:`Do NOT reveal the name. Explain naming rules for ${c.cat}s and guide the student's thinking.`}
+Naming steps for ${c.cat}:
+${(STEPS[c.cat]||[]).map((s,i)=>`${i+1}. ${s}`).join('\n')}
+Be concise, friendly, and encouraging. Respond in the same language the student uses.`
+    :`You are ChemBot, an IUPAC nomenclature tutor for organic chemistry.${learnCtx}
+Help with naming rules for alkanes, alkenes, alkynes, alcohols, aldehydes, ketones, carboxylic acids, amines, amides, and aromatics. Be concise, use examples. Respond in the same language the student uses.`;
+
+  S.chatHist.push({role:'user',content:msg});
+  S.chatBusy=true;document.getElementById('sendBtn').disabled=true;document.getElementById('typing').classList.add('on');
+  try{
+    const res=await fetch('/.netlify/functions/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:sys,messages:S.chatHist.slice(-12),token:AUTH?.token||null})});
+    const data=await res.json();
+    const bot=data.content?.[0]?.text||'Sorry, I could not process that.';
+    S.chatHist.push({role:'assistant',content:bot});
+    document.getElementById('typing').classList.remove('on');addMsg('b',bot);
+  }catch(e){document.getElementById('typing').classList.remove('on');addMsg('b','⚠ Connection error. Please try again.');S.chatHist.pop();}
+  S.chatBusy=false;document.getElementById('sendBtn').disabled=false;document.getElementById('chatIn').focus();
+  document.getElementById('msgs').scrollTop=9999;
+}
+
+function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
+function toggleRpanel(){document.getElementById('rpanel').classList.toggle('mob-open');}
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+renderAuthUI();
+addMsg('b',`👋 Hi! I'm ChemBot — your IUPAC nomenclature tutor.
+
+Use 🧪 Practice to name compounds, or 📖 Learn to study the rules first.
+
+Ask me about:
+• Any functional group or naming rule
+• Why a specific name is correct
+• Step-by-step guidance on any compound
+
+I won't spoil quiz answers, but I'll guide you there! 🧪`);
+
+const first=nextCompound();
+if(first)loadCompound(first);
+</script>
+</body>
+</html>
