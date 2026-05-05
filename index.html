@@ -56,8 +56,8 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .card{background:#fff;border-radius:20px;box-shadow:var(--sh);border:2px solid var(--border);overflow:hidden;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .img-wrap{background:linear-gradient(135deg,#e8edf8,#f0f4ff);display:flex;align-items:center;
-  justify-content:center;min-height:250px;position:relative}
-#structImg{max-width:300px;max-height:234px;object-fit:contain;display:none;border-radius:6px}
+  justify-content:center;min-height:380px;position:relative}
+#structImg{width:100%;max-width:460px;max-height:340px;object-fit:contain;display:none;border-radius:6px}
 .cat-badge{position:absolute;top:12px;left:12px;background:var(--navy);color:#fff;
   padding:3px 11px;border-radius:11px;font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
 .diff-badge{position:absolute;top:12px;right:12px;padding:3px 11px;border-radius:11px;
@@ -639,7 +639,7 @@ function toggleLearnCard(el){el.classList.toggle('open');}
 let S={compound:null,attempts:0,revealed:false,done:false,score:{ok:0,tot:0},streak:0,usedIds:new Set(),filter:'all',chatHist:[],chatBusy:false};
 const norm=s=>s.toLowerCase().trim().replace(/\s+/g,'').replace(/[–—]/g,'-');
 const check=(inp,c)=>c.acc.some(a=>norm(a)===norm(inp));
-const pubUrl=lk=>`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(lk)}/PNG?image_size=300x300`;
+const pubUrl = lk => `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(lk)}/PNG?image_size=600x600`;
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b;};
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 
