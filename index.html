@@ -308,6 +308,10 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
         <button class="fbtn" data-cat="amine">Amines</button>
         <button class="fbtn" data-cat="amide">Amides</button>
         <button class="fbtn" data-cat="aromatic">Aromatics</button>
+        <button class="fbtn" data-cat="ether">Ethers</button>
+        <button class="fbtn" data-cat="ester">Esters</button>
+        <button class="fbtn" data-cat="halide">Halides</button>
+        <button class="fbtn" data-cat="mixed">🧬 Mixed</button>
       </div>
 
       <div class="card" id="mainCard">
@@ -396,6 +400,10 @@ const DIFF = {
   amine:            {label:'Expert', pts:25, color:'#8b5cf6'},
   amide:            {label:'Expert', pts:25, color:'#8b5cf6'},
   aromatic:         {label:'Hard',   pts:20, color:'#ef4444'},
+  ether:            {label:'Medium', pts:15, color:'#0ea5e9'},
+  ester:            {label:'Hard',   pts:20, color:'#f97316'},
+  halide:           {label:'Easy',   pts:12, color:'#64748b'},
+  mixed:            {label:'Expert', pts:30, color:'#ec4899'},
 };
 const MULT = [1.0, 0.6, 0.3];
 function calcPts(cat,att){ return Math.round((DIFF[cat]?.pts||10)*(MULT[att-1]||0)); }
@@ -411,6 +419,34 @@ const STEPS = {
   amine:['Identify the N group: –NH₂ (primary), –NH– (secondary), –N< (tertiary)','Primary amines: parent chain + -amine; number from end closest to –NH₂','Secondary/tertiary: longest chain is parent; other N-groups get N- prefix','Example: CH₃NH₂ → methanamine; (CH₃)₂NH → N-methylmethanamine','Aniline and aromatic amines retain their IUPAC common names'],
   amide:['Identify the –CONH₂ group — it is ALWAYS carbon #1','Count all carbons including the carbonyl carbon','Replace -ic acid (or final -e) with -amide (2C → ethanamide)','No locant needed — the amide is always at C1','Common names: methanamide = formamide, ethanamide = acetamide'],
   aromatic:['Identify the benzene ring as the parent structure','One substituent: [substituent]benzene (e.g. methylbenzene, chlorobenzene)','Two substituents: number the ring for lowest locants (or use ortho-/meta-/para-)','Retained IUPAC names: toluene → methylbenzene; aniline stays aniline','Common prefixes: methyl-, ethyl-, chloro-, bromo-, nitro-, amino-'],
+  ether:[
+    'Identify the oxygen atom connecting two carbon groups (R–O–R\')',
+    'The smaller or simpler alkyl group becomes the ALKOXY prefix (methoxy-, ethoxy-, propoxy-…)',
+    'The larger alkyl group is the parent chain',
+    'Name: [alkoxy]-[parent chain] e.g. CH₃–O–CH₂CH₃ = methoxyethane',
+    'Common names are still widely accepted: dimethyl ether, diethyl ether, methyl ethyl ether',
+  ],
+  ester:[
+    'Identify the –COO– group (ester linkage): one side from an alcohol, one from a carboxylic acid',
+    'Name the ALCOHOL side first: it becomes an alkyl group (methyl, ethyl, propyl…)',
+    'Name the ACID side: use the acid name but replace -ic acid with -ate (ethanoic → ethanoate)',
+    'Combine: [alkyl from alcohol] [acyl from acid]ate — e.g. ethyl ethanoate',
+    'Example: CH₃COOCH₂CH₃ → ethyl ethanoate (acetic acid side = ethano-, alcohol side = ethyl)',
+  ],
+  halide:[
+    'Identify the halogen atom: F (fluoro), Cl (chloro), Br (bromo), I (iodo)',
+    'Number the parent chain from the end CLOSEST to the halogen (lowest locant)',
+    'Name: [position]-[halo]-[parent chain]ane — e.g. 1-chloropropane',
+    'Multiple halogens: use di-, tri- prefixes with positions — e.g. 1,2-dichloroethane',
+    'Common names (still used): methyl chloride, ethyl bromide, isopropyl iodide…',
+  ],
+  mixed:[
+    'PRIORITY ORDER (highest to lowest): –COOH > ester > –CONH₂ > –CHO > C=O > –OH > –NH₂ > halogens',
+    'The highest-priority group determines the SUFFIX (principal characteristic group)',
+    'All lower-priority groups become PREFIXES: hydroxy-, oxo-, amino-, chloro-, bromo-…',
+    'Number the chain from the end closest to the principal characteristic group',
+    'Example: HOCH₂CH₂COOH → 3-hydroxypropanoic acid (acid wins; –OH becomes hydroxy- prefix)',
+  ],
 };
 
 const LEARN_DATA = [
@@ -511,6 +547,54 @@ const LEARN_DATA = [
       {struct:'C₆H₆',name:'benzene'},{struct:'C₆H₅CH₃',name:'methylbenzene'},
       {struct:'C₆H₅CH₂CH₃',name:'ethylbenzene'},{struct:'C₆H₅Cl',name:'chlorobenzene'},
       {struct:'C₆H₅NO₂',name:'nitrobenzene'},
+    ]
+  },
+   {
+    cat:'ether', icon:'🔗', title:'Ethers',
+    what:'Contain an oxygen atom bonded to two carbon groups (R–O–R\'). Named by taking the smaller alkyl group as an alkoxy prefix (methoxy-, ethoxy-…) and the larger as the parent chain. Common names using "ether" are still widely accepted.',
+    pattern:'[alkoxy]-[parent chain]  /  common: [alkyl] [alkyl] ether',
+    examples:[
+      {struct:'CH₃–O–CH₃',name:'methoxymethane'},
+      {struct:'CH₃–O–CH₂CH₃',name:'methoxyethane'},
+      {struct:'CH₃CH₂–O–CH₂CH₃',name:'ethoxyethane'},
+      {struct:'CH₃–O–C₆H₅',name:'methoxybenzene'},
+      {struct:'cyclic –O–',name:'tetrahydrofuran'},
+    ]
+  },
+  {
+    cat:'ester', icon:'🍋', title:'Esters',
+    what:'Formed from a carboxylic acid + alcohol, losing water. The linkage is –COO–. Named by combining the alcohol-derived alkyl group with the acid-derived acylate name. Esters have fruity aromas and are common in flavors and fragrances.',
+    pattern:'[alkyl (from alcohol)] [acyl]ate',
+    examples:[
+      {struct:'HCOOCH₃',name:'methyl methanoate'},
+      {struct:'CH₃COOCH₃',name:'methyl ethanoate'},
+      {struct:'CH₃COOCH₂CH₃',name:'ethyl ethanoate'},
+      {struct:'CH₃CH₂COOCH₂CH₃',name:'ethyl propanoate'},
+      {struct:'C₆H₅COOCH₃',name:'methyl benzoate'},
+    ]
+  },
+  {
+    cat:'halide', icon:'⚡', title:'Haloalkanes',
+    what:'Alkanes with one or more hydrogen atoms replaced by a halogen: F, Cl, Br, or I. Named using the prefix fluoro-, chloro-, bromo-, or iodo- with a position number. The halogen is treated as a substituent on the parent chain.',
+    pattern:'[position]-[halo]-[parent chain]ane',
+    examples:[
+      {struct:'CH₃Cl',name:'chloromethane'},
+      {struct:'CH₃CH₂Br',name:'bromoethane'},
+      {struct:'CH₃CH₂CH₂Cl',name:'1-chloropropane'},
+      {struct:'CH₃CHClCH₃',name:'2-chloropropane'},
+      {struct:'ClCH₂CH₂Cl',name:'1,2-dichloroethane'},
+    ]
+  },
+  {
+    cat:'mixed', icon:'🧬', title:'Mixed Groups (Hierarchy)',
+    what:'Molecules with TWO or more functional groups require hierarchy rules. The highest-priority group becomes the suffix; lower-priority groups become prefixes. Priority: –COOH > ester > –CONH₂ > –CHO > C=O > –OH > –NH₂ > halogen.',
+    pattern:'[prefix groups]-[chain]-[suffix of highest-priority group]',
+    examples:[
+      {struct:'HOCH₂COOH',name:'2-hydroxyethanoic acid'},
+      {struct:'CH₃CH(OH)COOH',name:'2-hydroxypropanoic acid'},
+      {struct:'H₂NCH₂CH₂CH₂CH₂COOH',name:'5-aminopentanoic acid'},
+      {struct:'ClCH₂CH₂OH',name:'2-chloroethanol'},
+      {struct:'CH₃COCH₂COOH',name:'3-oxobutanoic acid'},
     ]
   },
 ];
