@@ -243,6 +243,29 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .fq-result-badge.correct{display:block;background:#dcfce7;color:#166534;border:2px solid #86efac}
 .fq-result-badge.wrong{display:block;background:#fee2e2;color:#991b1b;border:2px solid #fca5a5}
 
+/* ── REVIEW PANEL ────────────────────────────────────────── */
+#reviewPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
+#reviewPanel.on{display:flex}
+.rv-part{background:#fff;border-radius:20px;border:2px solid var(--border);box-shadow:var(--sh);overflow:hidden}
+.rv-hdr{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;transition:background .15s;user-select:none}
+.rv-hdr:hover{background:#f5f7ff}
+.rv-ico{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.rv-title-wrap{flex:1}
+.rv-part-label{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--gray)}
+.rv-title{font-weight:900;font-size:.97rem;color:var(--navy);margin-top:1px}
+.rv-arr{font-size:.8rem;color:var(--gray);transition:transform .25s;flex-shrink:0}
+.rv-part.open .rv-arr{transform:rotate(90deg)}
+.rv-body{display:none;padding:0 16px 16px;flex-direction:column;gap:8px}
+.rv-part.open .rv-body{display:flex}
+.rv-qa{background:#f5f7ff;border-radius:14px;border:1.5px solid var(--border);overflow:hidden}
+.rv-q{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;cursor:pointer;font-weight:800;font-size:.86rem;color:var(--navy);transition:background .15s;line-height:1.4}
+.rv-q:hover{background:#e8edf8}
+.rv-q-num{background:var(--navy);color:#fff;border-radius:50%;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;flex-shrink:0;margin-top:1px}
+.rv-a{display:none;padding:12px 14px;font-size:.83rem;line-height:1.7;color:#374151;background:#fff;border-top:1.5px solid var(--border);white-space:pre-wrap}
+.rv-qa.open .rv-a{display:block}
+.rv-qa.open .rv-q{background:#e8edf8}
+.rv-intro{padding:10px 14px;background:linear-gradient(135deg,#e8f4ff,#f0f4ff);border-radius:12px;font-size:.82rem;color:var(--navy);font-weight:700;border:1.5px solid var(--border)}
+
 /* ── RIGHT PANEL ─────────────────────────────────────────── */
 .rpanel{background:#fff;border-left:2px solid var(--border);display:flex;flex-direction:column;
   height:calc(100vh - 54px);position:sticky;top:54px}
@@ -400,6 +423,7 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
       <button class="mode-btn" onclick="setMode('stoich')">⚖️ Stoich</button>
       <button class="mode-btn" onclick="setMode('reactions')">🔥 Reactions</button>
       <button class="mode-btn" onclick="setMode('flash')">🃏 Flashcards</button>
+      <button class="mode-btn" onclick="setMode('review')">📋 Review</button>
     </div>
 
     <!-- QUIZ AREA -->
@@ -580,6 +604,9 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 
     </div>
 
+    <!-- REVIEW AREA -->
+    <div id="reviewPanel"></div>
+
   </div>
 
   <!-- RIGHT PANEL -->
@@ -635,6 +662,10 @@ const DIFF = {
   ester:            {label:'Hard',   pts:20, color:'#f97316'},
   halide:           {label:'Easy',   pts:12, color:'#64748b'},
   mixed:            {label:'Expert', pts:30, color:'#ec4899'},
+  carbon:           {label:'Concept',pts:0,  color:'#0ea5e9'},
+  organic_inorganic:{label:'Concept',pts:0,  color:'#06b6d4'},
+  isomers:          {label:'Concept',pts:0,  color:'#8b5cf6'},
+  biomolecules:     {label:'Concept',pts:0,  color:'#10b981'},
 };
 const MULT = [1.0, 0.6, 0.3];
 function calcPts(cat,att){ return Math.round((DIFF[cat]?.pts||10)*(MULT[att-1]||0)); }
@@ -856,6 +887,62 @@ const LEARN_DATA = [
       {struct:'CH₃COCH₂COOH',name:'3-oxobutanoic acid'},
     ]
   },
+  {
+    cat:'carbon', icon:'⚛️', title:'Carbon & Hybridization',
+    what:'Carbon (C) is in Group IVA with 4 valence electrons (2s²2p²), allowing it to form 4 bonds and create a vast array of molecules. C–C bonds are strong enough to be stable yet weak enough to break and rearrange — making carbon uniquely versatile in organic chemistry.',
+    pattern:'sp³ (tetrahedral, 109.5°) · sp² (trigonal planar, 120°) · sp¹ (linear, 180°)',
+    props:'sp³: 4 σ bonds only, tetrahedral geometry, 109.5° bond angles. Example: alkanes, alcohols.\nsp²: 3 σ bonds + 1 π bond, trigonal planar, 120° bond angles. Example: alkenes, carbonyls, benzene.\nsp¹: 2 σ bonds + 2 π bonds, linear, 180° bond angles. Example: alkynes.\n\nSigma (σ) bonds = strongest type, present in ALL bonds (single, double, triple). Pi (π) bonds = weaker, only in double bonds (1π) and triple bonds (2π). Single bond = 1σ. Double bond = 1σ + 1π. Triple bond = 1σ + 2π.',
+    uses:'⚛️ Hybridization predicts molecular geometry and reactivity. sp³ carbons → tetrahedral shape (alkanes, alcohols). sp² carbons → flat/planar structures (alkenes, aldehydes, ketones, benzene ring). sp¹ carbons → linear structures (alkynes). The number of hybrid orbitals created EQUALS the number of orbitals combined. Carbon forms chains, rings and branched structures — basis of all organic chemistry.',
+    examples:[
+      {struct:'CH₄ (sp³)',name:'methane — 4 σ bonds, tetrahedral, 109.5°'},
+      {struct:'CH₂=CH₂ (sp²)',name:'ethene — 1σ + 1π, trigonal planar, 120°'},
+      {struct:'HC≡CH (sp¹)',name:'ethyne — 1σ + 2π, linear, 180°'},
+      {struct:'C₆H₆ (sp²)',name:'benzene — all 6 carbons are sp² hybridized'},
+      {struct:'CH₃OH (sp³)',name:'methanol — tetrahedral carbon + OH group'},
+    ]
+  },
+  {
+    cat:'organic_inorganic', icon:'🔬', title:'Organic vs Inorganic Compounds',
+    what:'Organic chemistry is the study of carbon-containing compounds. Organic compounds mainly contain C and H, but also N, O, S, P, and halogens (F, Cl, Br). Inorganic compounds include most metals, salts, and non-carbon compounds (NaCl, H₂SO₄, NaOH).',
+    pattern:'Organic = C + H based (molecules) · Inorganic = ionic/metal compounds',
+    props:'Organic: low melting/boiling points, bad conductors, flammable, mostly insoluble in water (unless polar group present), particles are molecules.\nInorganic: high melting/boiling points, good conductors (ionic), non-flammable, generally water-soluble, particles are ions.\n\nClassifications: NaOH → inorganic. Urea CO(NH₂)₂ → organic. CHCl₃ (chloroform) → organic. NaCl → inorganic. Margarine → organic (lipid). H₂SO₄ → inorganic. Paraffin → organic (alkane). Ethanol → organic.',
+    uses:'🔬 Organic: fuels (gasoline, propane), medicines (aspirin, penicillin), plastics (polyethylene), foods (glucose, fats), solvents (ethanol, acetone), dyes, perfumes.\nInorganic: minerals (CaCO₃), metals, salts (NaCl), industrial acids (H₂SO₄, HCl), bases (NaOH), fertilizers (ammonium nitrate).\n\nIsomers: molecules with the SAME molecular formula but DIFFERENT arrangements of atoms. Constitutional isomers differ in connectivity. Stereoisomers have the same connectivity but differ in spatial arrangement (cis/trans, enantiomers).',
+    examples:[
+      {struct:'NaOH',name:'inorganic — ionic compound, no carbon'},
+      {struct:'C₂H₅OH',name:'organic — ethanol (alcohol)'},
+      {struct:'CHCl₃',name:'organic — chloroform (haloalkane)'},
+      {struct:'NaCl',name:'inorganic — table salt, ionic'},
+      {struct:'CO(NH₂)₂',name:'organic — urea (contains carbon)'},
+    ]
+  },
+  {
+    cat:'isomers', icon:'🔀', title:'Isomers & Structural Analysis',
+    what:'Isomers are molecules with the SAME molecular formula but DIFFERENT arrangements of atoms. They can have very different physical and chemical properties despite identical elemental composition.',
+    pattern:'Same molecular formula → different structure or spatial arrangement',
+    props:'Constitutional (structural) isomers: differ in connectivity (which atoms bond to which). Include: chain isomers (different parent chain shape), positional isomers (functional group at different position), functional group isomers (different functional group, e.g. alcohol vs ether).\n\nStereoisomers: same connectivity but different spatial arrangement. Include: cis/trans isomers (groups on same/opposite sides of C=C), enantiomers (non-superimposable mirror images, chirality). Stereoisomers can have dramatically different biological activities — drug chirality is critical in pharmaceuticals.',
+    uses:'🔀 Drug design: enantiomers of thalidomide — one treats morning sickness, the other causes birth defects. Cis/trans fatty acids: trans fats (from partial hydrogenation) raise LDL cholesterol; harmful to health. Natural rubber = cis-polyisoprene; gutta-percha = trans-polyisoprene — completely different properties. 2-methyl-1,3-butadiene (isoprene) isomers are used in synthetic rubber production. Fractional distillation separates isomers by boiling point differences.',
+    examples:[
+      {struct:'CH₃CH₂CH₂OH',name:'propan-1-ol (C₃H₈O)'},
+      {struct:'CH₃CH(OH)CH₃',name:'propan-2-ol (C₃H₈O) — constitutional isomer of above'},
+      {struct:'CH₃OCH₂CH₃',name:'methoxyethane (C₃H₈O) — functional group isomer'},
+      {struct:'cis-CH₃CH=CHCH₃',name:'cis-but-2-ene (H atoms same side of C=C)'},
+      {struct:'trans-CH₃CH=CHCH₃',name:'trans-but-2-ene (H atoms opposite sides)'},
+    ]
+  },
+  {
+    cat:'biomolecules', icon:'🧬', title:'Biomolecules — Lipids & Carbohydrates',
+    what:'Biomolecules are the four main classes of biological macromolecules: proteins, lipids, carbohydrates, and nucleic acids. For this course: lipids and carbohydrates. They are essential for life — providing energy, structure, and information storage.',
+    pattern:'Lipids: fats · oils · phospholipids · steroids · waxes · Carbohydrates: monosaccharides · polysaccharides',
+    props:'Lipids: hydrophobic (water-repelling), energy-dense (9 kcal/g). Fatty acids = long hydrocarbon chains (4–36 carbons), can be SATURATED (no C=C, solid at RT, animal fats) or UNSATURATED (has C=C, liquid at RT, vegetable oils). Triglyceride = 3 fatty acids + 1 glycerol molecule.\n\nCarbohydrates: made of C, H, and O atoms. Energy = 4 kcal/g. Two categories: MONOSACCHARIDES (simple sugars: glucose, fructose) and POLYSACCHARIDES (complex carbs: starch, cellulose, glycogen). Carbohydrates are responsible for SHORT-TERM energy storage in living organisms.',
+    uses:'🧬 Lipids: energy storage in adipose tissue, cell membrane structure (phospholipid bilayer), fat-soluble vitamins (A, D, E, K), hormone synthesis (steroids: cholesterol, estrogen, testosterone), insulation and organ protection. Ketogenic diet uses lipids as primary fuel. Other lipids: phospholipids (membranes), steroids (hormones), waxes (waterproofing).\n\nCarbohydrates: blood glucose (immediate energy), glycogen (liver/muscle energy reserve), starch (plant energy storage), cellulose (plant cell wall structure — indigestible fiber). Sources: grains, fruits, vegetables, dairy.',
+    examples:[
+      {struct:'CH₃(CH₂)₁₄COOH',name:'palmitic acid — saturated C16 fatty acid (butter, palm oil)'},
+      {struct:'CH₃(CH₂)₇CH=CH(CH₂)₇COOH',name:'oleic acid — monounsaturated C18 (olive oil)'},
+      {struct:'C₆H₁₂O₆',name:'glucose — monosaccharide, primary cellular fuel'},
+      {struct:'(C₆H₁₀O₅)ₙ',name:'starch / cellulose / glycogen — polysaccharides'},
+      {struct:'HOCH₂CH(OH)CH₂OH',name:'glycerol — backbone of triglycerides'},
+    ]
+  },
 ];
 
 let DB = [];
@@ -927,7 +1014,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#userBtn')&&!e.targe
 let currentMode='quiz';
 function setMode(m){
   currentMode=m;
-  const modes=['quiz','learn','stoich','reactions','flash'];
+  const modes=['quiz','learn','stoich','reactions','flash','review'];
   document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',modes[i]===m));
   document.getElementById('quizArea').style.display=m==='quiz'?'flex':'none';
   if(m==='quiz'){document.getElementById('quizArea').style.flexDirection='column';document.getElementById('quizArea').style.gap='16px';}
@@ -935,6 +1022,9 @@ function setMode(m){
   document.getElementById('stoichPanel').classList.toggle('on',m==='stoich');
   document.getElementById('reactPanel').classList.toggle('on',m==='reactions');
   document.getElementById('flashPanel').classList.toggle('on',m==='flash');
+  const rp=document.getElementById('reviewPanel');
+  rp.style.display=m==='review'?'flex':'none';
+  if(m==='review'){rp.style.flexDirection='column';rp.style.gap='14px';buildReview();}
   if(m==='learn')buildLearnCards();
   if(m==='stoich')buildStoich();
   if(m==='reactions')buildReactPanel();
@@ -1576,6 +1666,185 @@ Ask me about:
 • Step-by-step guidance on any compound
 
 I won't spoil quiz answers, but I'll guide you there! 🧪`);
+
+// ══════════════════════════════════════════════════
+//  REVIEW MODE
+// ══════════════════════════════════════════════════
+const REVIEW_DATA=[
+  {
+    part:'Part I',title:'Carbon & Hybridization',icon:'⚛️',color:'#0ea5e9',
+    intro:'Answers to Part I of the Final Review — fill in the blanks on carbon, hybridization, and bond types.',
+    items:[
+      {q:'Organic chemistry is the study of compounds that contain primarily ___ and ___ atoms.',
+       a:'Carbon (C) and Hydrogen (H).\n\nAside from C and H, organic compounds also contain:\n• Nitrogen (N)\n• Oxygen (O)\n• Sulfur (S)\n• Phosphorus (P)\n• Halogens: fluorine (F), chlorine (Cl), and bromine (Br)'},
+      {q:'Why is carbon such an important element? What family is it in and how many valence electrons does it have?',
+       a:'Carbon is in the IVA family (Group 14). It has 4 valence electrons (electron configuration: [He] 2s²2p²), allowing it to bond 4 times and create a vast array of molecules with different chemical properties.\n\nAnother key characteristic: C–C bonds are strong enough to be stable, but not too strong — making it possible for them to break and rearrange in new patterns. This unique balance is what makes carbon the backbone of all life.'},
+      {q:'In which orbitals are carbon\'s 4 valence electrons found? Explain sp³ hybridization.',
+       a:'Carbon\'s 4 valence electrons are found in orbitals 2s and 2p (specifically 2s¹2p³ in the excited/bonding state).\n\nWhen we combine the s orbital with ALL THREE p orbitals (px, py, pz), it results in sp³ hybridization, creating 4 equivalent hybrid orbitals arranged tetrahedrally (109.5° bond angles).'},
+      {q:'What is the difference between sigma (σ) and pi (π) bonds? Complete: single bond = ?, double bond = ?, triple bond = ?',
+       a:'• Single bond = 1 SIGMA (σ) bond — the strongest type of bond. Formed by direct (head-on) orbital overlap.\n• Double bond = 1 SIGMA (σ) bond + 1 PI (π) bond — stronger than a single bond overall.\n• Triple bond = 1 SIGMA (σ) bond + 2 PI (π) bonds — strongest of the three types.\n\nSigma (σ) bonds: found in ALL bonds, formed by head-on overlap, free rotation around σ bonds.\nPi (π) bonds: formed by lateral (sideways) overlap above and below the bond axis, prevent rotation, more reactive.'},
+      {q:'Complete the hybridization table: sp¹, sp², sp³ — type of bonds, molecular geometry, bond angle, example.',
+       a:'┌──────────┬───────────────────────┬──────────────────┬────────────┬─────────────┐\n│ Hybrid.  │ Type of bonds         │ Geometry         │ Bond angle │ Example     │\n├──────────┼───────────────────────┼──────────────────┼────────────┼─────────────┤\n│ sp¹      │ 1σ + 2π               │ Linear           │ 180°       │ HC≡CH       │\n│ sp²      │ 1σ + 1π               │ Trigonal planar  │ 120°       │ H₂C=CH₂    │\n│ sp³      │ 4σ (no π bonds)       │ Tetrahedral      │ 109.5°     │ CH₄         │\n└──────────┴───────────────────────┴──────────────────┴────────────┴─────────────┘\n\nMemory tip: the number after "sp" = number of pi bonds. sp¹ → 2π, sp² → 1π, sp³ → 0π.'},
+    ]
+  },
+  {
+    part:'Part II',title:'Organic vs Inorganic & Isomers',icon:'🔬',color:'#06b6d4',
+    intro:'Answers to Part II — comparing organic/inorganic compounds, examples, and isomer definitions.',
+    items:[
+      {q:'Complete the comparison table: organic vs inorganic compounds across all properties.',
+       a:'┌───────────────────┬───────────────────────────────────────┬────────────────────────────┐\n│ Property          │ Organic                               │ Inorganic                  │\n├───────────────────┼───────────────────────────────────────┼────────────────────────────┤\n│ Elements present  │ C, H (+ N, O, S, P, halogens)         │ Most metals & non-metals   │\n│ Particles         │ Mostly molecules                      │ Mostly ions                │\n│ Melting point     │ Low                                   │ High                       │\n│ Boiling point     │ Low                                   │ High                       │\n│ Conductivity      │ Bad conductors (no free ions)         │ Good conductors (ionic)    │\n│ Flammability      │ Flammable (C and H burn with O₂)      │ Non-flammable              │\n│ Solubility        │ Not soluble (unless polar group)      │ Generally soluble in water │\n└───────────────────┴───────────────────────────────────────┴────────────────────────────┘'},
+      {q:'Give examples of at least 4 common organic compounds and their molecular formulas.',
+       a:'Common organic compounds:\n1. Methane CH₄ — natural gas fuel\n2. Ethanol C₂H₅OH — alcoholic beverages, disinfectant\n3. Glucose C₆H₁₂O₆ — cellular energy\n4. Ethanoic acid CH₃COOH — vinegar\n5. Propane C₃H₈ — LPG cooking gas\n6. Acetone CH₃COCH₃ — nail polish remover'},
+      {q:'Classify each substance as ORGANIC or INORGANIC: NaOH, Urea, Chloroform, Table salt, Margarine, H₂SO₄, Paraffin, Ethanol.',
+       a:'• NaOH (sodium hydroxide) → INORGANIC — no carbon, ionic compound\n• Urea CO(NH₂)₂ → ORGANIC — contains carbon (nitrogen fertilizer)\n• Chloroform CHCl₃ → ORGANIC — carbon compound (haloalkane)\n• Table salt NaCl → INORGANIC — ionic compound, no carbon\n• Margarine → ORGANIC — fat/lipid (triglycerides with fatty acids)\n• Sulfuric acid H₂SO₄ → INORGANIC — no carbon, industrial acid\n• Paraffin → ORGANIC — long-chain alkane (from petroleum)\n• Ethanol C₂H₅OH → ORGANIC — alcohol, carbon compound'},
+      {q:'What is the definition of an isomer? Which molecules from the review are isomers of each other?',
+       a:'An ISOMER is a molecule with the SAME molecular formula but a DIFFERENT arrangement of atoms.\n\nFrom the review, the following pairs are isomers (same formula C₄H₈ or C₄H₁₀, etc.):\n• Butane (CH₃CH₂CH₂CH₃) and 2-methylpropane (CH₃CH(CH₃)CH₂) → both C₄H₁₀\n• But-1-ene and but-2-ene → both C₄H₈ (positional isomers of the double bond)\n• Square (cyclobutane C₄H₈) and hexagon (cyclohexane C₆H₁₂) have DIFFERENT formulas — NOT isomers of each other or of the other molecules shown.\n\nNote: propane, propan-1-ol, and dimethyl ether all have different molecular formulas — they are NOT isomers.'},
+      {q:'Propose a structure for an isomer of 2-methyl-1,3-butadiene (isoprene, C₅H₈) and name it.',
+       a:'2-methyl-1,3-butadiene = isoprene, formula C₅H₈ (two double bonds, branched).\n\nPossible isomers (same C₅H₈ formula):\n• 1,3-pentadiene: CH₂=CH–CH=CH–CH₃ (no branching, double bonds at C1 and C3)\n• 1,2-pentadiene: CH₂=C=CH–CH₂–CH₃ (cumulated diene)\n• Pent-1-en-4-yne: CH₂=CH–CH₂–C≡CH (alkene + alkyne)\n• Cyclopentene: five-membered ring with one double bond (C₅H₈)\n\nAll have the same molecular formula C₅H₈ but different structural arrangements.'},
+      {q:'What is the difference between constitutional isomers and stereoisomers?',
+       a:'CONSTITUTIONAL (structural) isomers:\n• Differ in CONNECTIVITY — which atoms are bonded to which\n• Have different physical/chemical properties\n• Examples: propan-1-ol vs propan-2-ol (–OH position differs); ethanol vs dimethyl ether (different functional group)\n\nSTEREOISOMERS:\n• Same connectivity (same bonds) but different SPATIAL ARRANGEMENT of atoms\n• Two types:\n  – Cis/trans isomers: around a C=C double bond. Cis = same side, trans = opposite sides.\n  – Enantiomers: non-superimposable mirror images (chiral molecules). Critical in drug design — one enantiomer may be therapeutic, the other toxic.'},
+    ]
+  },
+  {
+    part:'Part III',title:'Functional Groups Summary Table',icon:'🧪',color:'#f59e0b',
+    intro:'Completed functional group table — all groups covered during the semester with formula, properties, and uses.',
+    items:[
+      {q:'Alkanes: general formula, properties, uses.',
+       a:'Formula: CₙH₂ₙ₊₂  |  Example: propane CH₃CH₂CH₃\nProperties: nonpolar, insoluble in water, low melting/boiling point, flammable, chemically inert (only combustion and halogenation with UV light)\nUses: fuels (methane = natural gas, propane/butane = LPG, octane = gasoline), lubricating oils, candle wax, petroleum jelly'},
+      {q:'Alkenes: general formula, properties, uses.',
+       a:'Formula: CₙH₂ₙ  |  Example: ethene CH₂=CH₂\nProperties: slightly polar, insoluble in water, more reactive than alkanes (C=C undergoes addition), decolorizes Br₂ water (orange → colorless) and KMnO₄ (purple → colorless)\nUses: polyethylene (plastic bags, bottles), polypropylene, synthetic rubber, ethene as fruit-ripening plant hormone'},
+      {q:'Alkynes: general formula, properties, uses.',
+       a:'Formula: CₙH₂ₙ₋₂  |  Example: ethyne HC≡CH\nProperties: low polarity, insoluble in water, highly reactive C≡C bond (can do double addition), decolorizes Br₂ water and KMnO₄\nUses: acetylene welding torch (~3500°C, cuts metal), vinyl chloride → PVC plastic, pharmaceuticals starting material'},
+      {q:'Aromatic compounds (benzene ring): formula, properties, uses.',
+       a:'Formula: C₆H₅R  |  Example: toluene C₆H₅CH₃\nProperties: aromatic stability from delocalized π electrons (resonance), planar ring, nonpolar and insoluble in water, undergoes SUBSTITUTION reactions (not addition — would break aromaticity). Benzene is a known CARCINOGEN.\nUses: pharmaceuticals (aspirin, ibuprofen, paracetamol all contain benzene rings), polystyrene, nylon, synthetic dyes, solvents (toluene). Mainly used in the pharmaceutical industry.'},
+      {q:'Alcohols: formula, properties, uses.',
+       a:'Formula: R–OH  |  Example: ethanol CH₃CH₂OH\nProperties: strong H-bonding (due to –OH) → much higher BP than alkanes of same MW. Short-chain = miscible with water. Primary/secondary alcohols can be oxidized; tertiary cannot.\nUses: ethanol (beverages, disinfectant, fuel), methanol (industrial solvent — TOXIC, causes blindness), isopropanol (rubbing alcohol), glycerol (cosmetics, food, pharmaceuticals)'},
+      {q:'Ethers: formula, properties, uses.',
+       a:'Formula: R–O–R\'  |  Example: ethoxyethane CH₃CH₂OCH₂CH₃ (diethyl ether)\nProperties: quite INERT but react VIOLENTLY in air (form explosive peroxides). Mostly insoluble in water. Low BP (no self H-bonding, only H-bond acceptors). Good solvents.\nUses: diethyl ether (first surgical anesthetic in 1846, now replaced), THF (lab solvent), modern anesthetic gases (isoflurane, desflurane are haloethers), MTBE (gasoline additive)'},
+      {q:'Aldehydes: formula, properties, uses.',
+       a:'Formula: R–CHO  |  Example: methanal HCHO (formaldehyde)\nProperties: polar C=O, no self H-bonding → BP between alkanes and alcohols. Easily OXIDIZED to carboxylic acids. Positive Tollens\' test (silver mirror). Reduce Fehling\'s solution (blue → brick red).\nUses: methanal/formaldehyde (formalin — biological preservative, embalming), ethanal (formed from ethanol metabolism → responsible for hangovers), vanillin (vanilla flavor), benzaldehyde (almond aroma)'},
+      {q:'Ketones: formula, properties, uses.',
+       a:'Formula: R–CO–R\'  |  Example: propanone CH₃COCH₃ (acetone)\nProperties: polar C=O in MIDDLE of chain. Cannot H-bond to each other → lower BP than alcohols. Resistant to oxidation (no H on carbonyl carbon). NEGATIVE Tollens\' test. Excellent solvents (dissolve polar and nonpolar).\nBiochemistry: ketone bodies (acetone, acetoacetate, β-hydroxybutyrate) are produced during fasting, low-carb diet, and in uncontrolled diabetes.\nUses: propanone/acetone (nail polish remover, paint stripper, lab solvent), butanone/MEK (adhesives, coatings), cyclohexanone → nylon-6 production'},
+      {q:'Carboxylic acids: formula, properties, uses.',
+       a:'Formula: R–COOH  |  Example: ethanoic acid CH₃COOH\nProperties: very strong H-bonding (form dimers) → very high BP. Weak acids (pKa 4–5): partially ionize in water. Short-chain = water-miscible. Longest-chain = fatty acids (insoluble). HIGHEST priority functional group in IUPAC naming.\nUses: ethanoic acid (5% = vinegar, food preservative, aspirin synthesis), methanoic acid (ant venom, leather), long-chain fatty acids → soap (saponification), citric acid (food additive E330), lactic acid (dairy fermentation)'},
+      {q:'Esters: formula, properties, uses.',
+       a:'Formula: R–COO–R\'  |  Example: ethyl ethanoate CH₃COOC₂H₅\nProperties: polar C–O–C=O linkage. No self H-bonding → lower BP than carboxylic acids. Many have pleasant FRUITY aromas. Formed reversibly from acid + alcohol (esterification). Fats and oils are triglycerides (triesters of glycerol).\nUses: flavors & fragrances (isoamyl acetate = banana, ethyl methanoate = rum), aspirin (ester of salicylic acid + ethanoic acid), PET plastic (polyester fabric, bottles), biodiesel (fatty acid methyl esters)'},
+      {q:'Amines: formula, properties, uses.',
+       a:'Formula: R–NH₂ (primary) / R₂NH (secondary) / R₃N (tertiary)  |  Example: methanamine CH₃NH₂\nProperties: lone pair on N → BASIC (proton acceptors), characteristic fishy/ammonia odor. Primary/secondary amines H-bond → higher BP than alkanes. Small amines water-soluble. React with acids → ammonium salts.\nUses: neurotransmitters (dopamine, serotonin, adrenaline — all amines), pharmaceuticals (antihistamines, antidepressants, local anesthetics), aniline → synthetic dyes, hexamethylenediamine → nylon, amino acids (building blocks of proteins). In drugs and vitamins; starting material in synthetic processes.'},
+      {q:'Amides: formula, properties, uses.',
+       a:'Formula: R–CONH₂  |  Example: ethanamide CH₃CONH₂\nProperties: strong resonance in C–N bond (partial double bond). Very strong H-bonding (N–H···O=C) → very HIGH melting/boiling points. Stable and difficult to hydrolyze. Neutral character.\nUses: peptide bonds in proteins are amide bonds (hydrolyzed during digestion). Paracetamol/acetaminophen (analgesic). Nylon 6,6 and Kevlar (polyamides — ropes, bulletproof vests). Penicillin (β-lactam amide antibiotic). Urea H₂NCONH₂ (nitrogen fertilizer).'},
+    ]
+  },
+  {
+    part:'Part IV',title:'Nomenclature Priority & Examples',icon:'📝',color:'#8b5cf6',
+    intro:'IUPAC priority order and worked nomenclature examples from Part IV of the Final Review.',
+    items:[
+      {q:'What is the IUPAC functional group priority order?',
+       a:'Highest → Lowest priority (determines which group gets the SUFFIX):\n\nCarboxylic acid (–COOH) > Ester (–COO–) > Amide (–CONH₂) > Aldehyde (–CHO) > Ketone (C=O) > Alcohol (–OH) > Amine (–NH₂) > Alkene/Alkyne > Haloalkane/Ether\n\nThe HIGHEST-priority group = SUFFIX (principal characteristic group).\nAll LOWER-priority groups = PREFIXES:\n–OH → hydroxy–  |  C=O → oxo–  |  –NH₂ → amino–  |  –Cl → chloro–  |  –Br → bromo–\n\nAlways number the chain from the end CLOSEST to the principal group.'},
+      {q:'Name the structure: benzene ring with –NH₂ and –Br substituents.',
+       a:'2-bromoaniline (or o-bromoaniline)\n\nReasoning:\n• Aniline = aminobenzene (retained IUPAC name for NH₂ on benzene)\n• –NH₂ is at position 1 (principal group), –Br at position 2 (ortho)\n• Priority: –NH₂ > –Br for numbering\n• Name: 2-bromoaniline'},
+      {q:'Draw 3,3-dimethyl-5-phenyloctane. Also name the complex aldehyde structure.',
+       a:'3,3-dimethyl-5-phenyloctane:\n• Parent chain: octane (8 carbons)\n• Two methyl groups at C3 (gem-dimethyl)\n• Phenyl group at C5\n• Skeletal: C1–C2–C3(CH₃)₂–C4–C5(C₆H₅)–C6–C7–C8\n\nThe complex carbonyl compound shown (with CH₃ group, ethyl chain, and two C=O groups):\n4-methyl-5-oxoheptanal or similar — reading shows two carbonyls: a terminal CHO (aldehyde, C1) and an internal C=O (ketone, indicated as 5-oxo).\n\nPriority rule: aldehyde > ketone, so –CHO gets the suffix "-al" and the ketone becomes "oxo-" prefix.'},
+      {q:'Name or draw: 1-penten-2,3,4-triol | Trichloromethane | 1,2-dimethylcyclopropane | N,N-dimethylethanamine.',
+       a:'• 1-penten-2,3,4-triol: 5-carbon chain; double bond at C1 (CH₂=); hydroxyl groups at C2, C3, C4\n• Trichloromethane = CHCl₃ (chloroform) — three chlorines on a single carbon (methane backbone)\n• 1,2-dimethylcyclopropane: cyclopropane ring (3-membered) with methyl groups at C1 and C2\n• N,N-dimethylethanamine: ethanamine (2-carbon chain with –NH₂) + two methyl groups on the nitrogen atom: (CH₃)₂N–CH₂CH₃'},
+      {q:'Name or draw: 3-penten-1-yne | 5-phenyl-2-octene | 3-methylbutyl pentanoate | Nitrobenzene | Ethyl propanoate | 3,4-heptanediol | p-secbutylbenzoic acid.',
+       a:'• 3-penten-1-yne: HC≡C–CH=CH–CH₃ (triple bond at C1, double bond at C3, 5 carbons total)\n• 5-phenyl-2-octene: 8-carbon chain, C=C at C2, phenyl at C5\n• 3-methylbutyl pentanoate: ester of 3-methylbutan-1-ol + pentanoic acid (C₅ acid)\n• Nitrobenzene: benzene ring + –NO₂ group\n• Ethyl propanoate: CH₃CH₂COO–CH₂CH₃ (ester of ethanol + propanoic acid)\n• 3,4-heptanediol: 7-carbon chain with –OH at C3 and C4\n• p-secbutylbenzoic acid: benzoic acid (–COOH on benzene) with sec-butyl group at para (position 4)'},
+    ]
+  },
+  {
+    part:'Part V',title:'Reactions (14 exercises)',icon:'⚗️',color:'#ef4444',
+    intro:'All 14 reaction exercises from Part V answered — type of reaction, balanced equation, catalyst, and key notes.',
+    items:[
+      {q:'1. Complete combustion of butane (C₄H₁₀) + excess O₂ →',
+       a:'Type: Complete Combustion\nBalanced equation:\n2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O\nCatalyst: None (requires ignition only)\nProducts: ALWAYS CO₂ + H₂O with excess oxygen\nNote: Highly exothermic. Used in stoichiometry: from grams of butane → moles → grams of CO₂ produced.'},
+      {q:'2. Incomplete combustion of 2-methylbutane + limited O₂ → CO as product.',
+       a:'Type: Incomplete Combustion\nReactants: 2-methylbutane (C₅H₁₂) + limited O₂\nBalanced equation:\n2C₅H₁₂ + 7O₂ → 10CO + 12H₂O\nCatalyst: None\nNote: Limited oxygen → CO (carbon monoxide) instead of CO₂. CO is TOXIC: binds hemoglobin with higher affinity than O₂ → carbon monoxide poisoning. Occurs in car engines and poorly ventilated fires.'},
+      {q:'3. Reaction whose products are 2-chloropropane + hydrogen chloride.',
+       a:'Type: Halogenation (Free Radical Substitution)\nReaction:\nCH₃CH₂CH₃ + Cl₂ → CH₃CHClCH₃ + HCl\n(propane + chlorine → 2-chloropropane + hydrogen chloride)\nCatalyst: UV light (hν) — required to initiate radical mechanism\nMechanism: Initiation (UV splits Cl₂ → 2Cl•), Propagation, Termination\nNote: Unlike addition to alkenes, this is SUBSTITUTION — H is replaced by Cl. UV light is essential.'},
+      {q:'4. H₂C=CH₂ + H₂ → (complete the reaction)',
+       a:'Type: Hydrogenation (Addition)\nBalanced equation:\nCH₂=CH₂ + H₂ → CH₃CH₃\n(ethene + hydrogen → ethane)\nCatalyst: Ni, Pt, or Pd metal catalyst at ~150°C\nNote: Converts the C=C double bond to a C–C single bond. Used industrially to HARDEN vegetable oils into margarine. Bromine test before reaction: positive (decolorizes Br₂ water); after: negative (no more C=C).'},
+      {q:'5. Hydration of propene → (complete the reaction with Markovnikov\'s rule)',
+       a:'Type: Hydration (Addition of H₂O to alkene)\nBalanced equation:\nCH₃CH=CH₂ + H₂O → CH₃CH(OH)CH₃\n(propene + water → propan-2-ol)\nCatalyst: H₂SO₄ (concentrated sulfuric acid) + heat\nMarkovnikov\'s rule: –OH adds to the MORE substituted carbon (C2, not C1)\nProduct is propan-2-ol (secondary alcohol), NOT propan-1-ol (primary).\nNote: This is the industrial method to produce ethanol from ethene.'},
+      {q:'6. Hydrohalogenation: H⁺ + alkene → 2-chloro-2-methylpropane (complete reaction)',
+       a:'Type: Hydrohalogenation (Addition of HX to alkene)\nBalanced equation:\n(CH₃)₂C=CH₂ + HCl → (CH₃)₃CCl\n(2-methylpropene + hydrogen chloride → 2-chloro-2-methylpropane)\nCatalyst: H⁺ (acid catalyst, in the HCl itself)\nMarkovnikov\'s rule: H adds to the LESS substituted carbon, Cl to the MORE substituted (tertiary) carbon\nProduct is a tertiary halide — the most stable carbocation intermediate forms at the tertiary carbon.'},
+      {q:'7. Reaction that produces toluene (methylbenzene) + HCl from benzene.',
+       a:'Type: Friedel-Crafts Alkylation (Aromatic Substitution)\nBalanced equation:\nC₆H₆ + CH₃Cl → C₆H₅CH₃ + HCl\n(benzene + chloromethane → toluene/methylbenzene + hydrogen chloride)\nCatalyst: AlCl₃ (anhydrous aluminum chloride — Lewis acid)\nNote: AlCl₃ generates the CH₃⁺ carbocation electrophile that attacks benzene. This is the reaction to obtain TOLUENE from benzene. Product has a CH₃ group on the ring (alkylation).'},
+      {q:'8. C₆H₁₂O₆ → (yeast) → (complete the fermentation reaction)',
+       a:'Type: Fermentation (Biochemical)\nBalanced equation:\nC₆H₁₂O₆ → 2C₂H₅OH + 2CO₂\n(glucose → 2 ethanol + 2 carbon dioxide)\nCatalyst: ENZYMES from yeast (biological catalysts — enzymes are the catalyst in fermentation)\nConditions: Anaerobic (no oxygen), ~37°C\nNote: Basis of alcoholic beverages (beer, wine), bread rising (CO₂), and bioethanol fuel.'},
+      {q:'9. Complete oxidation of 1-propanol',
+       a:'Type: Oxidation (Primary alcohol → Carboxylic acid, complete)\nStepwise:\nCH₃CH₂CH₂OH → CH₃CH₂CHO → CH₃CH₂COOH\n(propan-1-ol → propanal → propanoic acid)\nCatalyst: KMnO₄ or K₂Cr₂O₇ in acidic conditions (H₂SO₄)\nNote: Primary alcohols oxidize in TWO steps: first to aldehyde, then to carboxylic acid. COMPLETE oxidation = all the way to the acid. KMnO₄ changes from purple → colorless; K₂Cr₂O₇ changes orange → green.'},
+      {q:'10. Complete oxidation of 2-butanol',
+       a:'Type: Oxidation (Secondary alcohol → Ketone, STOPS here)\nBalanced reaction:\nCH₃CH(OH)CH₂CH₃ → CH₃COCH₂CH₃\n(2-butanol → butanone / methyl ethyl ketone)\nCatalyst: KMnO₄ or K₂Cr₂O₇, acidic conditions\nNote: Secondary alcohols oxidize ONLY to ketones (cannot go further — no H on carbonyl carbon to remove). Ketones are resistant to further oxidation. This is the KEY difference from primary alcohols.'},
+      {q:'11. Complete reduction of 2-methylbutanoic acid',
+       a:'Type: Reduction (Carboxylic acid → Primary alcohol, complete)\nBalanced reaction:\nCH₃CH(CH₃)CH₂COOH → CH₃CH(CH₃)CH₂CH₂OH\n(2-methylbutanoic acid → 2-methylbutan-1-ol)\nCatalyst: LiAlH₄ (lithium aluminum hydride) — strong reducing agent\nNote: Complete reduction of a carboxylic acid gives a PRIMARY alcohol. Reduction = adding hydrogen / removing oxygen. This is the reverse of the full oxidation of a primary alcohol.'},
+      {q:'12. CH₃COOH (ethanoic acid) + NaOH →',
+       a:'Type: Neutralization (Acid–Base reaction)\nBalanced equation:\nCH₃COOH + NaOH → CH₃COONa + H₂O\n(ethanoic acid + sodium hydroxide → sodium ethanoate + water)\nCatalyst: None\nNote: Carboxylic acid + strong base → carboxylate SALT + water. This is NEUTRALIZATION — NOT esterification (which needs an alcohol, not a base). Product CH₃COONa is a salt (sodium ethanoate).'},
+      {q:'13. CH₃COOH (ethanoic acid) + CH₃CH₂CH₂OH (propan-1-ol) →',
+       a:'Type: Esterification (Condensation reaction)\nBalanced equation:\nCH₃COOH + CH₃CH₂CH₂OH ⇌ CH₃COOCH₂CH₂CH₃ + H₂O\n(ethanoic acid + propan-1-ol ⇌ propyl ethanoate + water)\nCatalyst: H₂SO₄ (concentrated), heat\nNote: REVERSIBLE reaction (⇌). To shift equilibrium right: remove water or use excess reagent. Product = propyl ethanoate (fruity ester). The acid part gives the "-ate" suffix; the alcohol part gives the alkyl prefix.'},
+      {q:'14. Methyl butanoate (ester) + NaOH →',
+       a:'Type: Saponification (Base-catalyzed hydrolysis of ester — IRREVERSIBLE)\nBalanced equation:\nCH₃CH₂CH₂COOCH₃ + NaOH → CH₃CH₂CH₂COONa + CH₃OH\n(methyl butanoate + NaOH → sodium butanoate + methanol)\nCatalyst: NaOH (strong base)\nNote: IRREVERSIBLE (unlike acid hydrolysis). This is the basis of SOAP MAKING: triglycerides (fat esters) + NaOH → soap (sodium carboxylate salts) + glycerol. Saponification ≠ Esterification (opposite reaction).'},
+    ]
+  },
+  {
+    part:'Part VI',title:'Biomolecules — Lipids & Carbohydrates',icon:'🧬',color:'#10b981',
+    intro:'Answers to Part VI — the four main biomolecules, lipids, fatty acids, triglycerides, and carbohydrates.',
+    items:[
+      {q:'What are the four main biomolecules?',
+       a:'The four main biomolecules (biological macromolecules) are:\n\n1. PROTEINS — polymers of amino acids linked by peptide (amide) bonds. Functions: enzymes, structural proteins (collagen), antibodies, hormones (insulin).\n\n2. LIPIDS — fats, oils, phospholipids, steroids, waxes. Functions: energy storage, cell membranes, vitamins.\n\n3. CARBOHYDRATES — sugars, starches, cellulose. Functions: energy (glucose, glycogen), structure (cellulose).\n\n4. NUCLEIC ACIDS — DNA and RNA. Functions: genetic information storage and protein synthesis.'},
+      {q:'Why are lipids ideal for cell structure? What type of diet uses them as energy?',
+       a:'Lipids are ideal components of cell structure due to their HYDROPHOBIC (water-repelling) nature.\n\nThe phospholipid bilayer forms the cell membrane — the hydrophobic tails face inward (away from water), while hydrophilic heads face outward. This creates a selective barrier that controls what enters and exits the cell.\n\nThe human body uses lipids as concentrated energy sources (9 kcal/g vs 4 kcal/g for carbs). This is the foundation of a KETOGENIC diet — when carbohydrate intake is very low, the body produces ketone bodies from fat as its primary fuel.'},
+      {q:'What are fatty acids? Explain saturation, glycerol + fatty acids = ?, and chain length.',
+       a:'Fatty ACIDS are one of the primary types of lipids. They are long HYDROCARBON CHAINS (carboxylic acids with a long alkyl tail) and can be:\n\n• SATURATED: no C=C double bonds → solid at room temperature (animal fats: butter, lard, coconut oil)\n• UNSATURATED: one or more C=C double bonds → liquid at room temperature (vegetable oils: olive, sunflower)\n\nIf we combine THREE fatty acids with ONE molecule of GLYCEROL (propan-1,2,3-triol) we will get a TRIGLYCERIDE (the main storage form of fat in the body and in food).\n\nIn a fatty acid, the hydrocarbon tail must be between 4 to 36 carbons (most commonly 12–20 carbons).'},
+      {q:'What are the functions of fatty acids and where can we obtain them from?',
+       a:'Functions of fatty acids (and lipids in general):\n• Long-term ENERGY STORAGE in adipose tissue (fat cells)\n• CELL MEMBRANE structure — phospholipid bilayer\n• Transport of fat-soluble vitamins A, D, E, K\n• Synthesis of HORMONES (steroids: estrogen, testosterone, cortisol)\n• Thermal insulation and organ cushioning\n• Precursors for prostaglandins (involved in inflammation)\n\nSources:\n• Animal fats: butter, lard, fatty meats, dairy (saturated fatty acids)\n• Vegetable oils: olive oil, sunflower, canola (unsaturated/monounsaturated)\n• Nuts and seeds: walnuts, flaxseed (omega-3 fatty acids)\n• Fatty fish: salmon, mackerel (omega-3 EPA and DHA)'},
+      {q:'What are the other three types of lipids (besides fatty acids/triglycerides)?',
+       a:'Besides fatty acids and triglycerides, the other three types of lipids are:\n\n1. PHOSPHOLIPIDS\n• Structure: glycerol + 2 fatty acids + phosphate group\n• Function: main component of the CELL MEMBRANE (phospholipid bilayer)\n• Hydrophilic head + 2 hydrophobic tails → amphipathic (both polar and nonpolar)\n\n2. STEROIDS\n• Structure: four fused carbon rings\n• Examples: cholesterol (membrane fluidity), estrogen, testosterone (sex hormones), cortisol (stress hormone), vitamin D\n\n3. WAXES\n• Esters of long-chain fatty acids + long-chain alcohols\n• Examples: beeswax (honeycomb), ear wax, plant cuticle wax (waterproofing leaves)'},
+      {q:'What are carbohydrates? Explain their role, composition, and classification.',
+       a:'CARBOHYDRATES are responsible for SHORT-TERM storage of energy in living organisms. They also make up the main structural components in PLANTS (cell walls = cellulose).\n\nAs the name suggests, carbohydrates are made of CARBON and HYDROGEN (and oxygen) atoms — formula often (CH₂O)ₙ.\n\nCarbohydrates are divided into two categories:\n\n• MONOSACCHARIDES (simple sugars):\n  – Glucose (C₆H₁₂O₆): primary cellular fuel, blood sugar\n  – Fructose (C₆H₁₂O₆): fruit sugar (isomer of glucose)\n  – Galactose: in dairy products\n\n• POLYSACCHARIDES (complex carbohydrates) — formed from many monosaccharides joined by glycosidic bonds:\n  – CELLULOSE: structural component in plant cell walls (indigestible fiber)\n  – GLYCOGEN: energy storage in animal liver and muscles\n  – STARCH: energy storage in plants (potatoes, grains, rice)\n\nPolysaccharides provide sustained, slow-release energy unlike simple sugars.'},
+    ]
+  },
+];
+
+let RV_BUILT=false;
+function buildReview(){
+  if(RV_BUILT)return;
+  RV_BUILT=true;
+  const panel=document.getElementById('reviewPanel');
+  panel.innerHTML=`
+    <div style="background:var(--navy);border-radius:20px;padding:20px 24px;color:#fff">
+      <div style="font-weight:900;font-size:1.15rem;margin-bottom:6px">📋 Final Review — All Questions Answered</div>
+      <div style="font-size:.83rem;color:var(--pink2);line-height:1.5">Complete answers and explanations for all 6 parts of the 3P Final Review guide. Click any section to expand, then click any question to see the full answer.</div>
+    </div>
+    ${REVIEW_DATA.map((part,pi)=>`
+    <div class="rv-part" id="rvp${pi}">
+      <div class="rv-hdr" onclick="toggleRvPart(${pi})">
+        <div class="rv-ico" style="background:${part.color}22;color:${part.color}">${part.icon}</div>
+        <div class="rv-title-wrap">
+          <div class="rv-part-label">${part.part}</div>
+          <div class="rv-title">${part.title}</div>
+        </div>
+        <span class="rv-arr">▶</span>
+      </div>
+      <div class="rv-body">
+        <div class="rv-intro">${part.intro}</div>
+        ${part.items.map((item,qi)=>`
+        <div class="rv-qa" id="rvq${pi}_${qi}">
+          <div class="rv-q" onclick="toggleRvQA(${pi},${qi})">
+            <div class="rv-q-num">${qi+1}</div>
+            <span>${item.q}</span>
+          </div>
+          <div class="rv-a">${item.a}</div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('')}`;
+}
+
+function toggleRvPart(pi){
+  document.getElementById('rvp'+pi).classList.toggle('open');
+}
+function toggleRvQA(pi,qi){
+  document.getElementById('rvq'+pi+'_'+qi).classList.toggle('open');
+}
 
 loadDB().then(() => {
   const first = nextCompound();
