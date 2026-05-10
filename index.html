@@ -242,6 +242,19 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .fq-result-badge{display:none;padding:9px 14px;border-radius:11px;font-weight:800;font-size:.84rem;line-height:1.4}
 .fq-result-badge.correct{display:block;background:#dcfce7;color:#166534;border:2px solid #86efac}
 .fq-result-badge.wrong{display:block;background:#fee2e2;color:#991b1b;border:2px solid #fca5a5}
+.fq-stage-badge{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.6px;padding:4px 10px;border-radius:10px;display:inline-block;width:fit-content;background:#e8edf8;color:var(--gray)}
+.fq-stage-badge.typein{background:linear-gradient(135deg,#dbeafe,#ede9fe);color:var(--navy)}
+.fq-mcq-opts{display:flex;flex-direction:column;gap:8px}
+.fq-mcq-opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-weight:700;font-size:.84rem;color:var(--navy);cursor:pointer;background:#fff;text-align:left;transition:all .15s;line-height:1.4;width:100%}
+.fq-mcq-opt:hover:not([disabled]){background:#f5f7ff;border-color:var(--navy)}
+.fq-mcq-opt.correct{border-color:var(--ok)!important;background:#f0fdf4!important;color:#166534!important}
+.fq-mcq-opt.wrong{border-color:var(--error)!important;background:#fee2e2!important;color:#991b1b!important}
+.fq-mcq-letter{background:var(--navy);color:#fff;border-radius:50%;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:900;flex-shrink:0;margin-top:1px}
+.fq-mcq-opt.correct .fq-mcq-letter{background:#16a34a}.fq-mcq-opt.wrong .fq-mcq-letter{background:#dc2626}
+.fq-typein-input{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:12px;font-family:inherit;font-size:.86rem;color:var(--navy);resize:vertical;min-height:80px;box-sizing:border-box;transition:border-color .15s}
+.fq-typein-input:focus{outline:none;border-color:var(--navy)}.fq-typein-input:disabled{background:#f5f7ff}
+.fq-submit-btn{padding:12px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:900;font-size:.9rem;cursor:pointer;transition:background .15s}
+.fq-submit-btn:hover{background:var(--navy2)}.fq-submit-btn:disabled{background:var(--gray);cursor:default}
 
 /* ── REVIEW PANEL ────────────────────────────────────────── */
 #reviewPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
@@ -584,16 +597,7 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
           </div>
         </div>
         <div class="fq-card" id="fqCard">
-          <div class="fq-label" id="fqLabel">Properties</div>
-          <div class="fq-q" id="fqQ">Loading…</div>
-          <button class="fq-reveal-btn" id="fqRevealBtn" onclick="revealFQAnswer()">👁 Show Answer</button>
-          <div class="fq-answer" id="fqAnswer"></div>
-          <div class="fq-grade-btns" id="fqGradeBtns">
-            <button class="fq-wrong-btn" onclick="answerFQ(false)">✗ Didn't know</button>
-            <button class="fq-correct-btn" onclick="answerFQ(true)">✓ I knew it</button>
-          </div>
-          <div class="fq-result-badge" id="fqResultBadge"></div>
-          <button class="fq-next-btn" id="fqNextBtn" onclick="nextFQ()">Next Question →</button>
+          <div class="fq-label" id="fqLabel">Loading…</div>
         </div>
         <div class="fc-done" id="fqDone">
           <div style="font-size:2.5rem;margin-bottom:10px">🎯</div>
@@ -1581,12 +1585,13 @@ function showFCDone(){
 }
 
 // ── QUIZ MODE ────────────────────────────────────
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 function buildFQDeck(){
   const all=getAllFC(FC_ST.deck);
-  // Sort most-overdue first so the hardest cards appear early
-  const now=Date.now();
   const sorted=[...all].sort((a,b)=>getSRSCard(a.id).due-getSRSCard(b.id).due);
-  FQ_ST.queue=sorted;FQ_ST.idx=0;FQ_ST.right=0;FQ_ST.wrong=0;
+  FQ_ST.queue=sorted.map(c=>({...c,stage:'mcq'}));
+  FQ_ST.idx=0;FQ_ST.right=0;FQ_ST.wrong=0;
   const names={properties:'⚗️ Properties Quiz',uses:'🏭 Uses Quiz',reactions:'🔥 Reactions Quiz',all:'🔀 Full Quiz'};
   document.getElementById('fqDeckLabel').textContent=names[FC_ST.deck]||'Quiz';
   document.getElementById('fqDone').classList.remove('on');
@@ -1594,42 +1599,102 @@ function buildFQDeck(){
   showFQ();updateFQStats();
 }
 
+function getFQDistractors(id,deck){
+  const pool=getAllFC(deck).filter(c=>c.id!==id);
+  return shuffle([...pool]).slice(0,3);
+}
+
 function showFQ(){
   const q=FQ_ST.queue[FQ_ST.idx];
   if(!q){showFQDone();return;}
-  document.getElementById('fqLabel').textContent=q.label;
-  document.getElementById('fqQ').textContent=q.q;
-  document.getElementById('fqAnswer').textContent=q.a;
-  document.getElementById('fqAnswer').classList.remove('on');
-  document.getElementById('fqRevealBtn').style.display='';
-  document.getElementById('fqGradeBtns').classList.remove('on');
-  document.getElementById('fqResultBadge').className='fq-result-badge';
-  document.getElementById('fqNextBtn').className='fq-next-btn';
+  const card=document.getElementById('fqCard');
+  const letters=['A','B','C','D'];
+  if(q.stage==='mcq'){
+    const distractors=getFQDistractors(q.id,FC_ST.deck);
+    const opts=shuffle([...distractors.map(d=>({txt:d.a.split('\n')[0].slice(0,100),ok:false})),{txt:q.a.split('\n')[0].slice(0,100),ok:true}]);
+    const ci=opts.findIndex(o=>o.ok);
+    card.innerHTML=`
+      <div class="fq-stage-badge">Step 1 / 2 &nbsp;·&nbsp; Multiple Choice</div>
+      <div class="fq-label">${escHtml(q.label)}</div>
+      <div class="fq-q">${escHtml(q.q)}</div>
+      <div class="fq-mcq-opts">${opts.map((o,i)=>`
+        <button class="fq-mcq-opt" onclick="answerFQMCQ(this,${i},${ci})">
+          <span class="fq-mcq-letter">${letters[i]}</span><span>${escHtml(o.txt)}${o.txt.length>=100?'…':''}</span>
+        </button>`).join('')}
+      </div>
+      <div class="fq-result-badge" id="fqResultBadge"></div>
+      <button class="fq-next-btn" id="fqNextBtn" style="display:none">Next →</button>`;
+  } else {
+    card.innerHTML=`
+      <div class="fq-stage-badge typein">Step 2 / 2 &nbsp;·&nbsp; Type It In</div>
+      <div class="fq-label">${escHtml(q.label)}</div>
+      <div class="fq-q">${escHtml(q.q)}</div>
+      <textarea class="fq-typein-input" id="fqTypeinInput" placeholder="Write what you remember from memory…" rows="3"></textarea>
+      <button class="fq-submit-btn" id="fqSubmitBtn" onclick="submitFQTypein()">Check Answer →</button>
+      <div class="fq-answer" id="fqAnswer" style="display:none;white-space:pre-wrap">${escHtml(q.a)}</div>
+      <div class="fq-grade-btns" id="fqGradeBtns" style="display:none;gap:10px">
+        <button class="fq-wrong-btn" onclick="answerFQ(false)">✗ I was wrong</button>
+        <button class="fq-correct-btn" onclick="answerFQ(true)">✓ I knew it</button>
+      </div>
+      <div class="fq-result-badge" id="fqResultBadge"></div>
+      <button class="fq-next-btn" id="fqNextBtn" style="display:none">Next →</button>`;
+  }
   updateFQStats();
 }
 
-function revealFQAnswer(){
-  document.getElementById('fqAnswer').classList.add('on');
-  document.getElementById('fqRevealBtn').style.display='none';
-  document.getElementById('fqGradeBtns').classList.add('on');
+function answerFQMCQ(btn,chosen,correct){
+  const opts=document.querySelectorAll('.fq-mcq-opt');
+  opts.forEach(b=>b.disabled=true);
+  opts[correct].classList.add('correct');
+  if(chosen!==correct)btn.classList.add('wrong');
+  const badge=document.getElementById('fqResultBadge');
+  const nxt=document.getElementById('fqNextBtn');
+  nxt.style.display='block';
+  if(chosen===correct){
+    badge.textContent='✅ Correct! Now write the full answer from memory.';
+    badge.className='fq-result-badge correct';
+    nxt.textContent='Continue to Type-In →';
+    nxt.onclick=function(){FQ_ST.queue[FQ_ST.idx].stage='typein';showFQ();};
+  } else {
+    FQ_ST.wrong++;
+    FQ_ST.queue.push({...FQ_ST.queue[FQ_ST.idx],stage:'mcq'});
+    badge.textContent='❌ Incorrect — study the highlighted answer. This card will repeat.';
+    badge.className='fq-result-badge wrong';
+    nxt.textContent='Next →';
+    nxt.onclick=function(){FQ_ST.idx++;showFQ();};
+  }
+  updateFQStats();
+}
+
+function submitFQTypein(){
+  const inp=document.getElementById('fqTypeinInput');
+  const btn=document.getElementById('fqSubmitBtn');
+  if(inp)inp.disabled=true;
+  if(btn)btn.disabled=true;
+  document.getElementById('fqAnswer').style.display='block';
+  document.getElementById('fqGradeBtns').style.display='flex';
 }
 
 function answerFQ(correct){
   const q=FQ_ST.queue[FQ_ST.idx];if(!q)return;
   updateSRS(q.id,correct?2:0);
-  if(correct){FQ_ST.right++;}else{FQ_ST.wrong++;FQ_ST.queue.push({...q});}
-  document.getElementById('fqGradeBtns').classList.remove('on');
+  document.getElementById('fqGradeBtns').style.display='none';
   const badge=document.getElementById('fqResultBadge');
-  badge.textContent=correct?'✅ Correct — this card will appear less often!':'❌ Incorrect — this card will come back more often.';
-  badge.className='fq-result-badge '+(correct?'correct':'wrong');
-  document.getElementById('fqNextBtn').className='fq-next-btn on';
+  const nxt=document.getElementById('fqNextBtn');
+  if(correct){
+    FQ_ST.right++;
+    badge.textContent='✅ Excellent — card mastered for this session!';
+    badge.className='fq-result-badge correct';
+  } else {
+    FQ_ST.wrong++;
+    FQ_ST.queue.push({...q,stage:'mcq'});
+    badge.textContent='❌ No worries — this card will repeat from Step 1.';
+    badge.className='fq-result-badge wrong';
+  }
+  nxt.textContent='Next →';
+  nxt.style.display='block';
+  nxt.onclick=function(){FQ_ST.idx++;showFQ();};
   updateFQStats();
-}
-
-function nextFQ(){
-  FQ_ST.idx++;
-  if(FQ_ST.idx>=FQ_ST.queue.length){showFQDone();return;}
-  showFQ();
 }
 
 function updateFQStats(){
