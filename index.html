@@ -137,6 +137,54 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .lc-ex-name{font-family:'Fira Code',monospace;font-size:.82rem;font-weight:600;color:var(--navy)}
 .lc-pattern{margin-top:12px;padding:10px 12px;background:#f5fff5;border:1.5px solid #86efac;
   border-radius:10px;font-size:.8rem;color:#166534;font-weight:700}
+.lc-section-title{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:12px 0 6px}
+.lc-props{background:#fff8f0;border:1.5px solid #fcd34d;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#78350f;line-height:1.6}
+.lc-uses{background:#f0fff4;border:1.5px solid #86efac;border-radius:10px;padding:10px 12px;font-size:.82rem;color:#166534;line-height:1.6}
+
+/* ── STOICHIOMETRY MODE ───────────────────────────────────── */
+#stoichPanel{display:none;flex-direction:column;gap:16px;animation:fadeIn .3s ease}
+#stoichPanel.on{display:flex}
+.stoich-hdr{background:#fff;border-radius:18px;border:2px solid var(--border);box-shadow:var(--sh);padding:18px;display:flex;align-items:center;gap:14px}
+.stoich-hdr-icon{width:48px;height:48px;background:#e0f2fe;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.stoich-progress{display:flex;align-items:center;gap:10px;background:#f5f7ff;border-radius:12px;padding:10px 14px;font-size:.84rem;font-weight:700;border:1.5px solid var(--border)}
+.sq{background:#fff;border-radius:18px;border:2px solid var(--border);box-shadow:var(--sh);padding:20px}
+.sq-num{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:10px}
+.sq-text{font-size:.93rem;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:18px;white-space:pre-wrap}
+.sq-opts{display:flex;flex-direction:column;gap:8px}
+.sq-opt{padding:11px 16px;border:2.5px solid var(--border);border-radius:12px;background:#fff;font-family:inherit;font-size:.88rem;font-weight:700;color:var(--navy);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;width:100%}
+.sq-opt:hover:not([disabled]){border-color:var(--navy);background:#f5f7ff}
+.sq-opt.correct{border-color:var(--ok)!important;background:#f0fdf4;color:#166534}
+.sq-opt.wrong{border-color:var(--error)!important;background:#fff1f1;color:#991b1b}
+.sq-letter{width:22px;height:22px;border-radius:6px;background:#e8edf8;display:flex;align-items:center;justify-content:center;font-size:.74rem;font-weight:900;flex-shrink:0;color:var(--navy)}
+.sq-expl{margin-top:12px;padding:12px 16px;background:#fffbee;border:2px solid #fcd34d;border-radius:12px;font-size:.84rem;color:#78350f;display:none;line-height:1.55;white-space:pre-wrap}
+.sq-expl.on{display:block}
+.sq-next{width:100%;padding:12px;background:linear-gradient(135deg,var(--green),#4ade80);color:var(--navy);border:none;border-radius:13px;font-family:inherit;font-weight:900;font-size:.92rem;cursor:pointer;transition:all .18s;margin-top:12px;display:none}
+.sq-next.on{display:block}
+.sq-next:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(90,191,50,.3)}
+
+/* ── REACTIONS MODE ──────────────────────────────────────── */
+#reactPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
+#reactPanel.on{display:flex}
+.react-subtabs{display:flex;gap:6px;background:#fff;border:2px solid var(--border);border-radius:12px;padding:4px;width:fit-content}
+.react-stab{padding:6px 16px;border:none;border-radius:8px;font-family:inherit;font-weight:800;font-size:.82rem;cursor:pointer;transition:all .18s;color:var(--gray);background:none}
+.react-stab.on{background:var(--navy);color:#fff}
+.rc{background:#fff;border-radius:18px;border:2px solid var(--border);box-shadow:var(--sh);overflow:hidden;cursor:pointer;transition:box-shadow .18s}
+.rc:hover{box-shadow:0 8px 32px rgba(26,31,94,.14)}
+.rc-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.rc-left{display:flex;align-items:center;gap:10px}
+.rc-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.rc-name{font-weight:900;font-size:.95rem}
+.rc-type{font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:10px;color:#fff;white-space:nowrap}
+.rc-arr{color:var(--gray);font-size:1rem;transition:transform .2s}
+.rc.open .rc-arr{transform:rotate(90deg)}
+.rc-body{display:none;border-top:2px solid var(--border);padding:16px}
+.rc.open .rc-body{display:block}
+.rc-row{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start}
+.rc-lbl{font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.3px;color:var(--gray);width:72px;flex-shrink:0;padding-top:2px}
+.rc-val{color:var(--navy);flex:1;font-size:.84rem;line-height:1.5}
+.rc-eq{font-family:'Fira Code',monospace;background:var(--navy);color:var(--green2);padding:10px 14px;border-radius:10px;font-size:.82rem;margin:10px 0;display:block}
+.rc-note{background:#f0f4ff;border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:10px 12px;font-size:.82rem;color:var(--navy);margin-top:4px;line-height:1.5}
+.rq-progress{display:flex;align-items:center;gap:10px;background:#f5f7ff;border-radius:12px;padding:10px 14px;font-size:.84rem;font-weight:700;border:1.5px solid var(--border)}
 
 /* ── RIGHT PANEL ─────────────────────────────────────────── */
 .rpanel{background:#fff;border-left:2px solid var(--border);display:flex;flex-direction:column;
@@ -292,6 +340,8 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
     <div class="mode-switch">
       <button class="mode-btn on" onclick="setMode('quiz')">🧪 Practice</button>
       <button class="mode-btn" onclick="setMode('learn')">📖 Learn</button>
+      <button class="mode-btn" onclick="setMode('stoich')">⚖️ Stoich</button>
+      <button class="mode-btn" onclick="setMode('reactions')">🔥 Reactions</button>
     </div>
 
     <!-- QUIZ AREA -->
@@ -347,6 +397,29 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
     <!-- LEARN AREA -->
     <div id="learnPanel">
       <div class="learn-grid" id="learnGrid"></div>
+    </div>
+
+    <!-- STOICHIOMETRY AREA -->
+    <div id="stoichPanel">
+      <div class="stoich-hdr">
+        <div class="stoich-hdr-icon">⚖️</div>
+        <div>
+          <div style="font-weight:900;font-size:1rem">Stoichiometry Practice</div>
+          <div style="font-size:.78rem;color:var(--gray);margin-top:2px">Molar mass · Mole conversions · Combustion calculations · Limiting reagents</div>
+        </div>
+      </div>
+      <div class="stoich-progress" id="stoichProgress">Question 1 of 12 · Score: 0/0</div>
+      <div class="sq" id="stoichQ"></div>
+    </div>
+
+    <!-- REACTIONS AREA -->
+    <div id="reactPanel">
+      <div class="react-subtabs">
+        <button class="react-stab on" onclick="setReactTab('study')">📚 Study</button>
+        <button class="react-stab" onclick="setReactTab('quiz')">❓ Quiz</button>
+      </div>
+      <div id="reactStudy"></div>
+      <div id="reactQuiz" style="display:none;flex-direction:column;gap:14px"></div>
     </div>
 
   </div>
@@ -454,6 +527,8 @@ const LEARN_DATA = [
     cat:'alkane', icon:'🔗', title:'Alkanes',
     what:'Saturated hydrocarbons — only C–C single bonds. General formula: CₙH₂ₙ₊₂. They are the simplest organic compounds and the base for all other naming.',
     pattern:'[locants of substituents]-[substituent names]-[parent chain]-ane',
+    props:'Nonpolar → insoluble in water, soluble in organic solvents. BP increases with chain length (stronger London dispersion forces). No H-bonding between molecules. Flammable. Chemically inert except combustion (with O₂) and halogenation (UV light required).',
+    uses:'🔥 Fuels: methane (natural gas), propane/butane (LPG), octane (gasoline). Long-chain alkanes → candle wax, petroleum jelly, lubricating oils. Combustion is the most important reaction of alkanes.',
     examples:[
       {struct:'CH₄',name:'methane'},{struct:'CH₃CH₃',name:'ethane'},
       {struct:'CH₃CH₂CH₃',name:'propane'},{struct:'CH₃CH(CH₃)CH₃',name:'2-methylpropane'},
@@ -464,6 +539,8 @@ const LEARN_DATA = [
     cat:'alkene', icon:'⚡', title:'Alkenes',
     what:'Contain at least one C=C double bond. General formula: CₙH₂ₙ (for one double bond). The double bond makes them more reactive than alkanes.',
     pattern:'[substituents]-[parent chain]-[locant]-ene',
+    props:'Slightly more polar than alkanes but still insoluble in water. More reactive: undergo addition reactions across C=C. Decolorize bromine water (Br₂, orange → colorless) — test for unsaturation. KMnO₄ (purple → colorless) also positive.',
+    uses:'🧴 Ethene (ethylene) → polyethylene (plastic bags, bottles). Propene → polypropylene. Ethene is a natural plant hormone that ripens fruit. Synthetic rubber (polyisoprene, SBR). Major cracking products in petroleum refining.',
     examples:[
       {struct:'CH₂=CH₂',name:'ethene'},{struct:'CH₂=CHCH₃',name:'propene'},
       {struct:'CH₂=CHCH₂CH₃',name:'but-1-ene'},{struct:'CH₃CH=CHCH₃',name:'but-2-ene'},
@@ -474,6 +551,8 @@ const LEARN_DATA = [
     cat:'alkyne', icon:'⚗️', title:'Alkynes',
     what:'Contain at least one C≡C triple bond. General formula: CₙH₂ₙ₋₂ (for one triple bond). More reactive than alkenes.',
     pattern:'[substituents]-[parent chain]-[locant]-yne',
+    props:'Reactive C≡C triple bond — can undergo double addition. Terminal alkynes (R–C≡C–H) are slightly acidic (react with strong bases). Similar polarity/solubility to alkenes: insoluble in water. Decolorize Br₂ water and KMnO₄.',
+    uses:'🔧 Ethyne (acetylene) → oxy-acetylene welding torch (burns at ~3500°C, cuts metal). Synthesis of vinyl chloride → PVC plastic. Propyne → synthetic rubber. Starting material for many pharmaceuticals.',
     examples:[
       {struct:'CH≡CH',name:'ethyne'},{struct:'CH≡CCH₃',name:'propyne'},
       {struct:'CH≡CCH₂CH₃',name:'but-1-yne'},{struct:'CH₃C≡CCH₃',name:'but-2-yne'},
@@ -484,6 +563,8 @@ const LEARN_DATA = [
     cat:'alcohol', icon:'🍶', title:'Alcohols',
     what:'Contain the hydroxyl group –OH attached to a carbon chain. They are considered derivatives of water where one H is replaced by an alkyl group.',
     pattern:'[substituents]-[parent chain]-[locant]-ol',
+    props:'Hydroxyl –OH enables strong H-bonding → much higher BP than alkanes of same MW. Short-chain alcohols fully miscible with water. Longer chain → less soluble (hydrocarbon part dominates). Primary/secondary oxidized by KMnO₄ or K₂Cr₂O₇. Tertiary alcohols CANNOT be oxidized (no H on carbon bearing –OH).',
+    uses:'🍺 Ethanol: alcoholic beverages, disinfectant, hand sanitizer, bioethanol fuel. Methanol: industrial solvent — TOXIC (causes blindness/death). Isopropanol: rubbing alcohol. Glycerol: cosmetics, food sweetener, pharmaceuticals. Ethanol metabolized to ethanal in the body.',
     examples:[
       {struct:'CH₃OH',name:'methanol'},{struct:'CH₃CH₂OH',name:'ethanol'},
       {struct:'CH₃CH₂CH₂OH',name:'propan-1-ol'},{struct:'CH₃CH(OH)CH₃',name:'propan-2-ol'},
@@ -494,6 +575,8 @@ const LEARN_DATA = [
     cat:'aldehyde', icon:'🟡', title:'Aldehydes',
     what:'Contain the carbonyl group –CHO at the END of the carbon chain. The carbonyl carbon is always C1, so no locant is needed.',
     pattern:'[parent chain]-al',
+    props:'Polar C=O, no –O–H → cannot self H-bond, but H-bonds to water. BP higher than alkanes, lower than alcohols (same MW). Short-chain: water-soluble. Easily oxidized to carboxylic acids by KMnO₄ / K₂Cr₂O₇. Positive Tollens\' test (silver mirror). Reduce Fehling\'s solution (blue → brick red).',
+    uses:'🧪 Methanal (formaldehyde): 40% solution = formalin, preserves biological specimens and used in embalming. Ethanal (acetaldehyde): formed when ethanol is metabolized — responsible for hangovers. Vanillin: vanilla flavor. Benzaldehyde: almond aroma.',
     examples:[
       {struct:'HCHO',name:'methanal'},{struct:'CH₃CHO',name:'ethanal'},
       {struct:'CH₃CH₂CHO',name:'propanal'},{struct:'CH₃CH₂CH₂CHO',name:'butanal'},
@@ -504,6 +587,8 @@ const LEARN_DATA = [
     cat:'ketone', icon:'🔴', title:'Ketones',
     what:'Contain the carbonyl group C=O in the MIDDLE of the chain (not at an end). The simplest ketone is propanone (acetone) with 3 carbons.',
     pattern:'[parent chain]-[locant]-one',
+    props:'Polar C=O in the middle of chain. Cannot H-bond to each other → lower BP than alcohols. More stable than aldehydes — resistant to oxidation (no H on carbonyl carbon). Negative Tollens\' test. Excellent solvents: dissolve both polar and nonpolar substances.',
+    uses:'💅 Propanone (acetone): nail polish remover, paint stripper, industrial solvent — most widely produced ketone. Butanone (MEK): adhesives, coatings, lacquers. Cyclohexanone → nylon-6 production. Ketone bodies (acetone, acetoacetate) produced during fasting or in diabetes.',
     examples:[
       {struct:'CH₃COCH₃',name:'propanone'},{struct:'CH₃COCH₂CH₃',name:'butan-2-one'},
       {struct:'CH₃CH₂COCH₂CH₃',name:'pentan-3-one'},{struct:'CH₃CO(CH₂)₂CH₃',name:'pentan-2-one'},
@@ -514,6 +599,8 @@ const LEARN_DATA = [
     cat:'carboxylic acid', icon:'🧪', title:'Carboxylic Acids',
     what:'Contain the carboxyl group –COOH at the end of the chain. The –COOH carbon is always C1. They are the highest-priority functional group in IUPAC naming.',
     pattern:'[parent chain]-oic acid',
+    props:'Very strong H-bonding (form dimers) → very high BP. Weak acids (pKa 4–5): partially ionize in water. Short-chain: water-miscible. Longer chain → less soluble (fatty acids). React with bases (neutralization → soaps), alcohols (esterification), amines (amide formation). Carboxyl group is the highest-priority suffix group.',
+    uses:'🍶 Ethanoic acid: 5% solution = vinegar, food preservative, aspirin synthesis. Methanoic acid: ant venom, leather processing. Long-chain fatty acids → soaps/detergents (saponification). Citric acid: food additive, cleaning products. Lactic acid: dairy fermentation, sports metabolism.',
     examples:[
       {struct:'HCOOH',name:'methanoic acid'},{struct:'CH₃COOH',name:'ethanoic acid'},
       {struct:'CH₃CH₂COOH',name:'propanoic acid'},{struct:'CH₃(CH₂)₂COOH',name:'butanoic acid'},
@@ -524,6 +611,8 @@ const LEARN_DATA = [
     cat:'amine', icon:'🟣', title:'Amines',
     what:'Contain nitrogen. Primary (–NH₂), secondary (–NH–), or tertiary (–N<). Primary amines are named by adding -amine to the parent chain. Secondary/tertiary amines use the N- prefix for extra groups on nitrogen.',
     pattern:'[parent chain]-[locant]-amine  /  N-[group]-[parent]-amine',
+    props:'Lone pair on N → basic (proton acceptors), characteristic fishy odor. Primary/secondary amines H-bond → higher BP than alkanes but lower than alcohols of same MW. Small amines: water-soluble. React with acids → ammonium salts.',
+    uses:'💊 Neurotransmitters: dopamine, serotonin, adrenaline are all amines. Pharmaceuticals: antihistamines, antidepressants, local anesthetics (novocaine, lidocaine). Aniline → synthetic dyes. Hexamethylenediamine → nylon. Amino acids = building blocks of proteins.',
     examples:[
       {struct:'CH₃NH₂',name:'methanamine'},{struct:'CH₃CH₂NH₂',name:'ethanamine'},
       {struct:'CH₃CH₂CH₂NH₂',name:'propan-1-amine'},{struct:'(CH₃)₂NH',name:'N-methylmethanamine'},
@@ -534,6 +623,8 @@ const LEARN_DATA = [
     cat:'amide', icon:'🔵', title:'Amides',
     what:'Contain the group –CONH₂ (or –CONHR, –CONR₂). Derived from carboxylic acids by replacing –OH with –NH₂. The carbonyl carbon is always C1.',
     pattern:'[parent chain]-amide',
+    props:'Strong resonance in C–N bond → partial double bond character. Very strong H-bonding (N–H···O=C) → very high MP/BP. Stable, difficult to hydrolyze (need strong acid/base and heat). Neutral character (unlike amines or acids). Very high melting points in polymers.',
+    uses:'💊 Peptide bonds in proteins are amide bonds (hydrolyzed during digestion). Paracetamol (acetaminophen): analgesic/antipyretic. Nylon 6,6 and Kevlar: polyamides → ropes, bulletproof vests. Penicillin: β-lactam amide antibiotic. Urea (H₂NCONH₂): nitrogen fertilizer.',
     examples:[
       {struct:'HCONH₂',name:'methanamide'},{struct:'CH₃CONH₂',name:'ethanamide'},
       {struct:'CH₃CH₂CONH₂',name:'propanamide'},{struct:'C₆H₅CONH₂',name:'benzamide'},
@@ -543,16 +634,20 @@ const LEARN_DATA = [
     cat:'aromatic', icon:'⬡', title:'Aromatic Compounds',
     what:'Based on the benzene ring (C₆H₆) — 6 carbons with alternating double bonds. Benzene is the parent; substituents are named as prefixes. Two substituents can use number locants or ortho- (1,2), meta- (1,3), para- (1,4).',
     pattern:'[substituent]benzene  /  [locant]-[sub₁]-[locant]-[sub₂]-benzene',
+    props:'Aromatic stability from delocalized π electrons (resonance energy ~150 kJ/mol for benzene). Undergo electrophilic aromatic SUBSTITUTION — not addition (would destroy aromaticity). Planar, flat rings. Nonpolar: insoluble in water. Benzene is a known CARCINOGEN (causes leukemia).',
+    uses:'💊 Benzene → styrene (polystyrene), nylon, dyes — but TOXIC. Toluene: solvent, TNT. Pharmaceuticals: aspirin, paracetamol, ibuprofen all contain benzene rings. Styrene → polystyrene foam cups/packaging. Aniline → dye industry. Mainly used in the pharmaceutical industry.',
     examples:[
       {struct:'C₆H₆',name:'benzene'},{struct:'C₆H₅CH₃',name:'methylbenzene'},
       {struct:'C₆H₅CH₂CH₃',name:'ethylbenzene'},{struct:'C₆H₅Cl',name:'chlorobenzene'},
       {struct:'C₆H₅NO₂',name:'nitrobenzene'},
     ]
   },
-   {
+  {
     cat:'ether', icon:'🔗', title:'Ethers',
     what:'Contain an oxygen atom bonded to two carbon groups (R–O–R\'). Named by taking the smaller alkyl group as an alkoxy prefix (methoxy-, ethoxy-…) and the larger as the parent chain. Common names using "ether" are still widely accepted.',
     pattern:'[alkoxy]-[parent chain]  /  common: [alkyl] [alkyl] ether',
+    props:'Bent C–O–C angle, polar but cannot H-bond to each other → BP between alkanes and alcohols of same MW. H-bond acceptors only → slightly soluble in water. Chemically inert: good solvents. Diethyl ether: highly flammable and volatile (BP 34°C) — explosive vapors!',
+    uses:'🏥 Diethyl ether: first widely used surgical anesthetic (1846), now replaced due to explosiveness. THF (tetrahydrofuran): common lab solvent. Modern anesthetic gases (isoflurane, desflurane): haloethers. MTBE: former gasoline oxygenate additive. Crown ethers: ion transport in chemistry.',
     examples:[
       {struct:'CH₃–O–CH₃',name:'methoxymethane'},
       {struct:'CH₃–O–CH₂CH₃',name:'methoxyethane'},
@@ -565,6 +660,8 @@ const LEARN_DATA = [
     cat:'ester', icon:'🍋', title:'Esters',
     what:'Formed from a carboxylic acid + alcohol, losing water. The linkage is –COO–. Named by combining the alcohol-derived alkyl group with the acid-derived acylate name. Esters have fruity aromas and are common in flavors and fragrances.',
     pattern:'[alkyl (from alcohol)] [acyl]ate',
+    props:'Polar C–O–C=O linkage. No self H-bonding → lower BP than carboxylic acids of same MW. Many have pleasant fruity aromas. Formed reversibly from acid + alcohol (esterification). Hydrolyzed by water (acid or base). Fats and oils are triesters (triglycerides of glycerol).',
+    uses:'🍋 Flavors & fragrances: isoamyl acetate (banana), ethyl methanoate (rum), benzyl acetate (jasmine). Aspirin (acetylsalicylic acid): ester of salicylic acid + ethanoic acid. PET (polyethylene terephthalate): plastic bottles, polyester fabric. Biodiesel: fatty acid methyl esters. Natural fats/oils are triglycerides.',
     examples:[
       {struct:'HCOOCH₃',name:'methyl methanoate'},
       {struct:'CH₃COOCH₃',name:'methyl ethanoate'},
@@ -577,6 +674,8 @@ const LEARN_DATA = [
     cat:'halide', icon:'⚡', title:'Haloalkanes',
     what:'Alkanes with one or more hydrogen atoms replaced by a halogen: F, Cl, Br, or I. Named using the prefix fluoro-, chloro-, bromo-, or iodo- with a position number. The halogen is treated as a substituent on the parent chain.',
     pattern:'[position]-[halo]-[parent chain]ane',
+    props:'Polar C–X bond → higher BP than corresponding alkane. Insoluble in water, soluble in organic solvents. Reactivity: RF < RCl < RBr < RI (C–X bond strength decreases). Good electrophiles → undergo nucleophilic substitution (SN1/SN2) and elimination (E1/E2).',
+    uses:'❄️ CFCs (chlorofluorocarbons): formerly refrigerants/propellants — NOW BANNED (cause ozone layer depletion). CH₂Cl₂ (DCM): paint remover, solvent. Chloroform (CHCl₃): historical anesthetic. Vinyl chloride → PVC pipes, flooring. Teflon (PTFE): non-stick coatings, stain-resistant materials.',
     examples:[
       {struct:'CH₃Cl',name:'chloromethane'},
       {struct:'CH₃CH₂Br',name:'bromoethane'},
@@ -589,6 +688,8 @@ const LEARN_DATA = [
     cat:'mixed', icon:'🧬', title:'Mixed Groups (Hierarchy)',
     what:'Molecules with TWO or more functional groups require hierarchy rules. The highest-priority group becomes the suffix; lower-priority groups become prefixes. Priority: –COOH > ester > –CONH₂ > –CHO > C=O > –OH > –NH₂ > halogen.',
     pattern:'[prefix groups]-[chain]-[suffix of highest-priority group]',
+    props:'Properties depend on the combination of functional groups present. Multiple polar groups → increased polarity and water solubility. Amino acids: both –NH₂ and –COOH → form zwitterions at physiological pH (7.4). Priority determines both the name suffix and the main site of reactivity.',
+    uses:'🧬 Amino acids: building blocks of all proteins (20 standard amino acids). Lactic acid (hydroxy acid): dairy fermentation, muscle metabolism, biodegradable plastics (PLA). Citric acid: food industry (E330), cleaning products. β-keto acids: metabolic intermediates in fatty acid breakdown.',
     examples:[
       {struct:'HOCH₂COOH',name:'2-hydroxyethanoic acid'},
       {struct:'CH₃CH(OH)COOH',name:'2-hydroxypropanoic acid'},
@@ -668,12 +769,16 @@ document.addEventListener('click',e=>{if(!e.target.closest('#userBtn')&&!e.targe
 let currentMode='quiz';
 function setMode(m){
   currentMode=m;
-  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',(i===0&&m==='quiz')||(i===1&&m==='learn')));
+  const modes=['quiz','learn','stoich','reactions'];
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',modes[i]===m));
   document.getElementById('quizArea').style.display=m==='quiz'?'flex':'none';
-  document.getElementById('quizArea').style.flexDirection='column';
-  document.getElementById('quizArea').style.gap='16px';
+  if(m==='quiz'){document.getElementById('quizArea').style.flexDirection='column';document.getElementById('quizArea').style.gap='16px';}
   document.getElementById('learnPanel').classList.toggle('on',m==='learn');
+  document.getElementById('stoichPanel').classList.toggle('on',m==='stoich');
+  document.getElementById('reactPanel').classList.toggle('on',m==='reactions');
   if(m==='learn')buildLearnCards();
+  if(m==='stoich')buildStoich();
+  if(m==='reactions')buildReactPanel();
 }
 
 // ══════════════════════════════════════════════════
@@ -681,7 +786,7 @@ function setMode(m){
 // ══════════════════════════════════════════════════
 function buildLearnCards(){
   const grid=document.getElementById('learnGrid');
-  if(grid.children.length>0)return; // already built
+  if(grid.children.length>0)return;
   grid.innerHTML=LEARN_DATA.map(d=>{
     const diff=DIFF[d.cat];
     const steps=STEPS[d.cat]||[];
@@ -703,6 +808,10 @@ function buildLearnCards(){
           ${steps.map((s,i)=>`<li class="lc-step"><div class="lc-snum">${i+1}</div><span>${s}</span></li>`).join('')}
         </ul>
         <div class="lc-pattern">🔑 Pattern: <span class="lc-formula">${d.pattern}</span></div>
+        <div class="lc-section-title">⚗️ Properties</div>
+        <div class="lc-props">${d.props||''}</div>
+        <div class="lc-section-title">🏭 Uses &amp; Applications</div>
+        <div class="lc-uses">${d.uses||''}</div>
         <div class="lc-examples-title" style="margin-top:12px">💡 Examples</div>
         <div class="lc-examples">
           ${d.examples.map(ex=>`<div class="lc-ex">
@@ -893,6 +1002,196 @@ Help with naming rules for alkanes, alkenes, alkynes, alcohols, aldehydes, keton
 
 function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
 function toggleRpanel(){document.getElementById('rpanel').classList.toggle('mob-open');}
+
+// ══════════════════════════════════════════════════
+//  STOICHIOMETRY DATA
+// ══════════════════════════════════════════════════
+const STOICH_DATA = [
+  {q:'What is the molar mass of methane (CH₄)?\n(C = 12 g/mol, H = 1 g/mol)',opts:['12 g/mol','14 g/mol','16 g/mol','18 g/mol'],ans:2,expl:'CH₄: C = 12 + H₄ = 4×1 = 4 → Total = 12 + 4 = 16 g/mol.'},
+  {q:'What is the molar mass of ethanol (C₂H₅OH)?\n(C = 12, H = 1, O = 16 g/mol)',opts:['44 g/mol','46 g/mol','48 g/mol','42 g/mol'],ans:1,expl:'C₂H₅OH: 2×12 + 6×1 + 16 = 24 + 6 + 16 = 46 g/mol.'},
+  {q:'How many moles are in 36 grams of water (H₂O)?\n(M of H₂O = 18 g/mol)',opts:['1 mol','2 mol','3 mol','0.5 mol'],ans:1,expl:'n = m ÷ M = 36 g ÷ 18 g/mol = 2 mol.'},
+  {q:'What mass of CO₂ (M = 44 g/mol) is contained in 3 moles of CO₂?',opts:['88 g','132 g','44 g','176 g'],ans:1,expl:'m = n × M = 3 mol × 44 g/mol = 132 g.'},
+  {q:'If 300 grams of ethane (C₂H₆, M = 30 g/mol) are burned with excess oxygen, how many grams of CO₂ (M = 44 g/mol) are produced?\nReaction: 2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O',opts:['440 g','880 g','660 g','220 g'],ans:1,expl:'Step 1: mol C₂H₆ = 300 ÷ 30 = 10 mol\nStep 2: mol CO₂ = 10 × (4÷2) = 20 mol\nStep 3: mass CO₂ = 20 × 44 = 880 g'},
+  {q:'Balance the combustion of propane: C₃H₈ + _O₂ → 3CO₂ + 4H₂O\nWhat is the coefficient of O₂?',opts:['4','5','6','3'],ans:1,expl:'C₃H₈ + 5O₂ → 3CO₂ + 4H₂O\nCheck O: right side = 3×2 + 4×1 = 6+4 = 10 atoms. Left: 5×2 = 10. ✓'},
+  {q:'How many grams of water (M = 18 g/mol) are produced when 16 g of methane (M = 16 g/mol) burn completely?\nCH₄ + 2O₂ → CO₂ + 2H₂O',opts:['18 g','36 g','54 g','72 g'],ans:1,expl:'Step 1: mol CH₄ = 16 ÷ 16 = 1 mol\nStep 2: mol H₂O = 1 × 2 = 2 mol\nStep 3: mass H₂O = 2 × 18 = 36 g'},
+  {q:'What is the percent composition by mass of carbon in CO₂ (M = 44 g/mol)?',opts:['27.3%','36.4%','45.5%','54.5%'],ans:0,expl:'%C = (12 ÷ 44) × 100 = 27.3%\nCO₂ has one C atom (12 g/mol) out of 44 g/mol total.'},
+  {q:'In the reaction C₃H₈ + 5O₂ → 3CO₂ + 4H₂O, you have 2 mol of propane and 8 mol of O₂. Which is the limiting reagent?',opts:['C₃H₈','O₂','Both are equal','CO₂'],ans:1,expl:'2 mol C₃H₈ requires 2 × 5 = 10 mol O₂, but only 8 mol O₂ is available.\nTherefore O₂ is the limiting reagent.'},
+  {q:'A sample of hydrocarbon burns completely to give 4.4 g of CO₂. How many moles of CO₂ were produced?\n(M of CO₂ = 44 g/mol)',opts:['0.1 mol','0.2 mol','0.4 mol','1 mol'],ans:0,expl:'n(CO₂) = m ÷ M = 4.4 g ÷ 44 g/mol = 0.1 mol.'},
+  {q:'How many moles of O₂ are needed for the complete combustion of 1 mol of hexane (C₆H₁₄)?\nC₆H₁₄ + ? O₂ → 6CO₂ + 7H₂O',opts:['6 mol','7 mol','9 mol','9.5 mol'],ans:3,expl:'Balance O on right: 6×2 + 7×1 = 12 + 7 = 19 oxygen atoms.\nNeed 19 ÷ 2 = 9.5 mol O₂.'},
+  {q:'What is the empirical formula of a compound with 40.0% C, 6.7% H, and 53.3% O by mass?\n(C=12, H=1, O=16 g/mol)',opts:['CH₂O','C₂H₄O₂','C₃H₆O₃','CHO'],ans:0,expl:'In 100 g: C = 40/12 = 3.33 mol, H = 6.7/1 = 6.7 mol, O = 53.3/16 = 3.33 mol.\nRatio = 1 : 2 : 1 → Empirical formula: CH₂O.'},
+];
+
+let SQ_STATE={idx:0,score:{ok:0,tot:0}};
+
+function buildStoich(){
+  if(document.getElementById('stoichQ').dataset.built)return;
+  document.getElementById('stoichQ').dataset.built='1';
+  showStoichQ();
+}
+
+function showStoichQ(){
+  const i=SQ_STATE.idx;
+  const total=STOICH_DATA.length;
+  const d=STOICH_DATA[i%total];
+  const letters=['A','B','C','D'];
+  document.getElementById('stoichProgress').textContent=`Question ${(i%total)+1} of ${total} · Score: ${SQ_STATE.score.ok}/${SQ_STATE.score.tot}`;
+  document.getElementById('stoichQ').innerHTML=`
+    <div class="sq-num">Question ${(i%total)+1} of ${total}</div>
+    <div class="sq-text">${d.q}</div>
+    <div class="sq-opts">
+      ${d.opts.map((o,j)=>`<button class="sq-opt" onclick="answerStoich(this,${j},${d.ans})" data-idx="${j}">
+        <span class="sq-letter">${letters[j]}</span>${o}
+      </button>`).join('')}
+    </div>
+    <div class="sq-expl" id="sq-expl">${d.expl}</div>
+    <button class="sq-next" id="sq-next" onclick="nextStoich()">Next Question →</button>
+  `;
+}
+
+function answerStoich(btn,chosen,correct){
+  const opts=document.querySelectorAll('.sq-opt');
+  opts.forEach(b=>b.disabled=true);
+  opts[correct].classList.add('correct');
+  if(chosen!==correct)btn.classList.add('wrong');
+  SQ_STATE.score.tot++;
+  if(chosen===correct)SQ_STATE.score.ok++;
+  document.getElementById('sq-expl').classList.add('on');
+  document.getElementById('sq-next').classList.add('on');
+}
+
+function nextStoich(){
+  SQ_STATE.idx++;
+  document.getElementById('stoichQ').dataset.built='1';
+  showStoichQ();
+}
+
+// ══════════════════════════════════════════════════
+//  REACTIONS DATA
+// ══════════════════════════════════════════════════
+const RC_COLORS={Addition:'#0ea5e9',Substitution:'#8b5cf6',Elimination:'#f59e0b',Combustion:'#ef4444',Oxidation:'#f97316',Aromatic:'#ec4899',Condensation:'#22c55e',Hydrolysis:'#64748b',Biochemical:'#10b981'};
+
+const REACTIONS_DATA=[
+  {name:'Hydrogenation',type:'Addition',icon:'🔧',reactants:'Alkene + H₂',products:'Alkane',catalyst:'Ni, Pt, or Pd (heterogeneous metal catalyst)',conditions:'~150°C, metal surface',eq:'C₂H₄ + H₂ → C₂H₆\n(ethene + hydrogen → ethane)',note:'Converts unsaturated C=C to saturated C–C. Used industrially to harden vegetable oils into margarine (partial hydrogenation). Positive test: decolorizes Br₂ water before reaction.'},
+  {name:'Hydration',type:'Addition',icon:'💧',reactants:'Alkene + H₂O',products:'Alcohol',catalyst:'H₂SO₄ (concentrated sulfuric acid)',conditions:'Acid catalyst, heat',eq:'C₂H₄ + H₂O → C₂H₅OH\n(ethene + water → ethanol)',note:'Adds –OH and –H across the C=C bond. Markovnikov\'s rule: –OH adds to the MORE substituted carbon. Industrial method to produce ethanol. Reverse of dehydration.'},
+  {name:'Dehydration',type:'Elimination',icon:'♨️',reactants:'Alcohol',products:'Alkene + H₂O',catalyst:'H₂SO₄ (concentrated) or Al₂O₃',conditions:'Heat + strong acid catalyst',eq:'C₂H₅OH → C₂H₄ + H₂O\n(ethanol → ethene + water)',note:'Removes –OH and a neighboring –H. Reverse of hydration. Heat must be removed from the system. The dehydration of an alcohol in the presence of a strong acid yields an alkene.'},
+  {name:'Halogenation (Addition)',type:'Addition',icon:'⚗️',reactants:'Alkene + X₂ (Br₂ or Cl₂)',products:'Vicinal dihalide',catalyst:'None (spontaneous addition to C=C)',conditions:'Room temperature, no catalyst needed',eq:'C₂H₄ + Br₂ → C₂H₄Br₂\n(ethene + bromine → 1,2-dibromoethane)',note:'Bromine water test: orange solution decolorizes if C=C is present. Cl₂ also works. The two halogens add to opposite faces (anti-addition) via bromonium ion intermediate.'},
+  {name:'Halogenation (Substitution)',type:'Substitution',icon:'☀️',reactants:'Alkane + X₂ (Cl₂ or Br₂)',products:'Haloalkane + HX',catalyst:'UV light (hν) or high temperature',conditions:'UV radiation required to initiate',eq:'CH₄ + Cl₂ → CH₃Cl + HCl\n(methane + chlorine → chloromethane + HCl)',note:'Free radical mechanism: initiation (UV splits X₂ → 2X•), propagation, termination. Can give mixtures of mono- and polyhalogenated products. Unlike addition to alkenes, requires energy input.'},
+  {name:'Complete Combustion',type:'Combustion',icon:'🔥',reactants:'Hydrocarbon + O₂ (excess)',products:'CO₂ + H₂O',catalyst:'None (requires ignition)',conditions:'Excess oxygen, ignition source',eq:'2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O\n(ethane + oxygen → CO₂ + water)',note:'Always produces CO₂ and H₂O with excess O₂. Highly exothermic. Hydrocarbons are the main fuels (alkanes, petroleum). Used in stoichiometry calculations (grams of CO₂ produced).'},
+  {name:'Incomplete Combustion',type:'Combustion',icon:'💨',reactants:'Hydrocarbon + O₂ (limited)',products:'CO (or C soot) + H₂O',catalyst:'None',conditions:'Limited/insufficient oxygen',eq:'2CH₄ + 3O₂ → 2CO + 4H₂O\n(methane + limited O₂ → CO + water)',note:'Produces toxic carbon monoxide (CO) or even carbon (soot). Occurs in car engines, poorly ventilated fires. CO binds hemoglobin (higher affinity than O₂) → carbon monoxide poisoning.'},
+  {name:'Oxidation of Alcohols',type:'Oxidation',icon:'🔴',reactants:'Primary alcohol → Aldehyde → Carboxylic acid\nSecondary alcohol → Ketone\nTertiary alcohol → Cannot be oxidized',products:'Aldehyde / Carboxylic acid / Ketone',catalyst:'KMnO₄ or K₂Cr₂O₇ (oxidizing agents, acidic conditions)',conditions:'Acid conditions (H₂SO₄), oxidizing agent',eq:'CH₃CH₂OH + [O] → CH₃CHO → CH₃COOH\n(ethanol → ethanal → ethanoic acid)',note:'Tertiary alcohols CANNOT be oxidized (no H on the carbon bearing –OH). K₂Cr₂O₇ changes color: orange → green. KMnO₄ changes color: purple → colorless. Primary oxidized stepwise: alcohol → aldehyde → acid.'},
+  {name:'Friedel-Crafts Alkylation',type:'Aromatic',icon:'⬡',reactants:'Benzene + RCl (alkyl halide)',products:'Alkylbenzene + HCl',catalyst:'AlCl₃ (Lewis acid, anhydrous)',conditions:'Anhydrous conditions, room temperature',eq:'C₆H₆ + CH₃Cl → C₆H₅CH₃ + HCl\n(benzene + chloromethane → toluene + HCl)',note:'AlCl₃ generates the carbocation electrophile (R⁺) that attacks benzene. Used to attach alkyl groups to aromatic rings. Risk of polyalkylation (product more reactive than starting benzene). To get toluene from benzene → alkylation reaction.'},
+  {name:'Friedel-Crafts Acylation',type:'Aromatic',icon:'⬡',reactants:'Benzene + RCOCl (acyl chloride)',products:'Aryl ketone + HCl',catalyst:'AlCl₃ (Lewis acid, anhydrous)',conditions:'Anhydrous conditions',eq:'C₆H₆ + CH₃COCl → C₆H₅COCH₃ + HCl\n(benzene + ethanoyl chloride → acetophenone + HCl)',note:'Attaches an acyl group (R–C=O) to benzene. Unlike alkylation, the acylated product is DEACTIVATED (electron-withdrawing C=O), so no polyacylation. More controlled than alkylation.'},
+  {name:'Esterification',type:'Condensation',icon:'🍋',reactants:'Carboxylic acid + Alcohol',products:'Ester + H₂O',catalyst:'H₂SO₄ (concentrated, catalytic amount)',conditions:'Heat + acid catalyst, reversible reaction',eq:'CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O\n(ethanoic acid + ethanol ⇌ ethyl ethanoate + water)',note:'Reversible condensation reaction. To shift equilibrium right: remove water, use excess acid/alcohol. Esters have fruity aromas. Aspirin is made by esterification of salicylic acid with ethanoic acid (acetic acid).'},
+  {name:'Saponification',type:'Hydrolysis',icon:'🧼',reactants:'Ester (fat/oil) + NaOH (strong base)',products:'Carboxylate salt (soap) + Alcohol',catalyst:'NaOH (base)',conditions:'Strong base, heat',eq:'RCOOR\' + NaOH → RCOONa + R\'OH\n(triglyceride + NaOH → soap + glycerol)',note:'Irreversible base-catalyzed hydrolysis (unlike acid hydrolysis). Basis of soap making: fats/oils (triglycerides) + NaOH → soaps (long-chain carboxylate salts) + glycerol. Soap cleans because its molecules have a hydrophilic head and hydrophobic tail.'},
+  {name:'Fermentation',type:'Biochemical',icon:'🍺',reactants:'Glucose (C₆H₁₂O₆)',products:'Ethanol + CO₂',catalyst:'Enzymes (produced by yeast)',conditions:'Anaerobic conditions (no oxygen), ~37°C',eq:'C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂\n(glucose → ethanol + carbon dioxide)',note:'Fermentation uses ENZYMES as catalysts (biological catalysts). Anaerobic process (no O₂). Used to produce alcoholic beverages (beer, wine), bread (CO₂ makes dough rise), and bioethanol fuel. Enzymes are the reagent AND catalyst in fermentation.'},
+];
+
+const REACT_QUIZ=[
+  {q:'What type of reaction converts an alkene to an alkane by adding H₂?',opts:['Hydration','Hydrogenation','Halogenation','Dehydration'],ans:1,expl:'Hydrogenation: alkene + H₂ → alkane. Metal catalyst (Ni, Pt, Pd), ~150°C. Used in industry to harden vegetable oils to make margarine.'},
+  {q:'The catalyst used in a Friedel-Crafts alkylation/acylation reaction is:',opts:['H₂SO₄','KMnO₄','AlCl₃','FeBr₃'],ans:2,expl:'AlCl₃ (aluminum chloride) is the Lewis acid catalyst. It generates the electrophilic species that attacks the benzene ring. The catalyst must be anhydrous.'},
+  {q:'Fermentation of glucose (C₆H₁₂O₆) produces:',opts:['CO₂ and H₂O only','Ethanol and CO₂','Ethanol and H₂O','Acetic acid and CO₂'],ans:1,expl:'C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂. Catalyzed by enzymes from yeast, under anaerobic (no O₂) conditions. Basis of wine, beer, and bread making.'},
+  {q:'The dehydration of an alcohol in the presence of a strong acid yields:',opts:['Aldehyde','Ketone','Alkane','Alkene'],ans:3,expl:'Dehydration: alcohol → alkene + H₂O. Requires H₂SO₄ (strong acid) and heat. It is the reverse of hydration (adding H₂O to alkene). Example: ethanol → ethene + water.'},
+  {q:'Which oxidizing agents are commonly used in the lab to oxidize alcohols?',opts:['H₂SO₄ and HCl','NaOH and AlCl₃','KMnO₄ and K₂Cr₂O₇','FeBr₃ and AlCl₃'],ans:2,expl:'KMnO₄ (potassium permanganate, purple) and K₂Cr₂O₇ (potassium dichromate, orange) are the oxidizing agents. Primary → aldehyde → carboxylic acid. Secondary → ketone. Tertiary → cannot be oxidized.'},
+  {q:'To obtain toluene (methylbenzene) from benzene, which reaction is used?',opts:['Acylation','Oxidation','Alkylation','Chlorination'],ans:2,expl:'Friedel-Crafts Alkylation: C₆H₆ + CH₃Cl → C₆H₅CH₃ + HCl, using AlCl₃ as catalyst. Alkylation attaches an alkyl group (CH₃ in this case) to the benzene ring.'},
+  {q:'In the reaction C₂H₄ + H₂O → C₂H₅OH, what is the name of the reaction?',opts:['Dehydration','Hydrogenation','Hydration','Oxidation'],ans:2,expl:'Hydration: adding water (H₂O) across a C=C double bond to form an alcohol. Catalyst: H₂SO₄. This is the industrial method to produce ethanol from ethene (from petroleum cracking).'},
+  {q:'What is the by-product of esterification (acid + alcohol → ester + ?)?',opts:['CO₂','H₂','H₂O','HCl'],ans:2,expl:'Esterification: RCOOH + R\'OH ⇌ RCOOR\' + H₂O. Water is produced and lost. The reaction is reversible and uses concentrated H₂SO₄ as catalyst with heat.'},
+  {q:'Halogenation of an alkane with Cl₂ requires which condition?',opts:['AlCl₃ catalyst','H₂SO₄ catalyst','UV light (hν)','High pressure'],ans:2,expl:'Free radical substitution requires UV light (hν) to initiate. UV splits Cl₂ → 2Cl• radicals. Mechanism: initiation, propagation, termination. Unlike addition to alkenes, no AlCl₃ is needed.'},
+  {q:'Saponification is the reaction of a fat (ester) with:',opts:['H₂SO₄ (acid)','HCl (acid)','NaOH (base)','H₂O only'],ans:2,expl:'Saponification: ester + NaOH → soap (sodium carboxylate) + glycerol. It is an irreversible, base-catalyzed hydrolysis. Used in soap production. Triglycerides + NaOH → 3 soap molecules + glycerol.'},
+  {q:'Complete combustion of a hydrocarbon with EXCESS oxygen always produces:',opts:['CO and H₂O','CO₂ and H₂O','CO₂ and H₂','C (soot) and H₂O'],ans:1,expl:'Complete combustion (excess O₂): CₙHₘ + O₂ → CO₂ + H₂O. Limited oxygen → incomplete combustion → CO or soot. Always highly exothermic.'},
+  {q:'In fermentation, what type of substance acts as the catalyst?',opts:['Inorganic acid','Metal (Ni, Pt)','Enzymes (from yeast)','AlCl₃'],ans:2,expl:'Enzymes are biological catalysts produced by yeast. They catalyze the conversion of glucose to ethanol and CO₂ under anaerobic conditions (~37°C). Enzymes are highly specific and function at low temperatures.'},
+];
+
+let RQ_STATE={tab:'study',qIdx:0,score:{ok:0,tot:0},built:false};
+
+function buildReactPanel(){
+  if(RQ_STATE.built)return;
+  RQ_STATE.built=true;
+  buildReactStudy();
+  buildReactQuiz();
+}
+
+function setReactTab(tab){
+  RQ_STATE.tab=tab;
+  document.querySelectorAll('.react-stab').forEach((b,i)=>b.classList.toggle('on',(i===0&&tab==='study')||(i===1&&tab==='quiz')));
+  document.getElementById('reactStudy').style.display=tab==='study'?'flex':'none';
+  document.getElementById('reactQuiz').style.display=tab==='quiz'?'flex':'none';
+  if(tab==='study')document.getElementById('reactStudy').style.flexDirection='column';
+  if(tab==='quiz')document.getElementById('reactQuiz').style.flexDirection='column';
+}
+
+function buildReactStudy(){
+  const el=document.getElementById('reactStudy');
+  el.style.display='flex';el.style.flexDirection='column';el.style.gap='10px';
+  el.innerHTML=REACTIONS_DATA.map((r,i)=>{
+    const col=RC_COLORS[r.type]||'#64748b';
+    return `<div class="rc" onclick="toggleRC(this)">
+      <div class="rc-hdr">
+        <div class="rc-left">
+          <div class="rc-ico" style="background:${col}22;color:${col}">${r.icon}</div>
+          <div>
+            <div class="rc-name">${r.name}</div>
+            <div class="rc-type" style="background:${col}">${r.type}</div>
+          </div>
+        </div>
+        <span class="rc-arr">▶</span>
+      </div>
+      <div class="rc-body">
+        <div class="rc-row"><div class="rc-lbl">Reactants</div><div class="rc-val">${r.reactants}</div></div>
+        <div class="rc-row"><div class="rc-lbl">Products</div><div class="rc-val">${r.products}</div></div>
+        <div class="rc-row"><div class="rc-lbl">Catalyst</div><div class="rc-val" style="font-weight:800;color:${col}">${r.catalyst}</div></div>
+        <div class="rc-row"><div class="rc-lbl">Conditions</div><div class="rc-val">${r.conditions}</div></div>
+        <code class="rc-eq">${r.eq}</code>
+        <div class="rc-note">${r.note}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleRC(el){el.classList.toggle('open');}
+
+function buildReactQuiz(){
+  const el=document.getElementById('reactQuiz');
+  el.style.gap='14px';
+  showReactQ();
+}
+
+function showReactQ(){
+  const i=RQ_STATE.qIdx;
+  const total=REACT_QUIZ.length;
+  const d=REACT_QUIZ[i%total];
+  const letters=['A','B','C','D'];
+  const prog=document.getElementById('reactQuiz');
+  prog.innerHTML=`
+    <div class="rq-progress">Question ${(i%total)+1} of ${total} · Score: ${RQ_STATE.score.ok}/${RQ_STATE.score.tot}</div>
+    <div class="sq">
+      <div class="sq-num">Reactions Quiz · Question ${(i%total)+1}</div>
+      <div class="sq-text">${d.q}</div>
+      <div class="sq-opts">
+        ${d.opts.map((o,j)=>`<button class="sq-opt" onclick="answerReactQ(this,${j},${d.ans})" data-idx="${j}">
+          <span class="sq-letter">${letters[j]}</span>${o}
+        </button>`).join('')}
+      </div>
+      <div class="sq-expl" id="rq-expl">${d.expl}</div>
+      <button class="sq-next" id="rq-next" onclick="nextReactQ()">Next Question →</button>
+    </div>
+  `;
+}
+
+function answerReactQ(btn,chosen,correct){
+  const opts=document.querySelectorAll('#reactQuiz .sq-opt');
+  opts.forEach(b=>b.disabled=true);
+  opts[correct].classList.add('correct');
+  if(chosen!==correct)btn.classList.add('wrong');
+  RQ_STATE.score.tot++;
+  if(chosen===correct)RQ_STATE.score.ok++;
+  document.getElementById('rq-expl').classList.add('on');
+  document.getElementById('rq-next').classList.add('on');
+}
+
+function nextReactQ(){
+  RQ_STATE.qIdx++;
+  showReactQ();
+}
 
 // ══════════════════════════════════════════════════
 //  INIT
