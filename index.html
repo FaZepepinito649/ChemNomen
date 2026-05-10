@@ -186,6 +186,42 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .rc-note{background:#f0f4ff;border-left:4px solid var(--navy);border-radius:0 10px 10px 0;padding:10px 12px;font-size:.82rem;color:var(--navy);margin-top:4px;line-height:1.5}
 .rq-progress{display:flex;align-items:center;gap:10px;background:#f5f7ff;border-radius:12px;padding:10px 14px;font-size:.84rem;font-weight:700;border:1.5px solid var(--border)}
 
+/* ── FLASHCARD MODE ──────────────────────────────────────── */
+#flashPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
+#flashPanel.on{display:flex}
+.flash-subtabs{display:flex;gap:6px;flex-wrap:wrap;background:#fff;border:2px solid var(--border);border-radius:12px;padding:4px;width:fit-content}
+.flash-stab{padding:5px 13px;border:none;border-radius:8px;font-family:inherit;font-weight:800;font-size:.78rem;cursor:pointer;transition:all .18s;color:var(--gray);background:none}
+.flash-stab.on{background:var(--navy);color:#fff}
+.flash-progress-wrap{background:#fff;border-radius:14px;border:2px solid var(--border);padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.flash-bar-bg{background:#e8edf8;border-radius:8px;height:8px;overflow:hidden}
+.flash-bar-fill{background:linear-gradient(90deg,var(--green),#4ade80);height:100%;border-radius:8px;transition:width .4s}
+.flash-stats{display:flex;gap:16px;font-size:.76rem;font-weight:800;color:var(--gray)}
+.fc-wrap{perspective:1000px}
+.fc{background:transparent;border-radius:20px;height:280px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;box-shadow:var(--sh);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center}
+.fc-front{background:#fff;border:2px solid var(--border)}
+.fc-back{background:var(--navy);border:2px solid var(--navy);transform:rotateY(180deg)}
+.fc-label{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:3px 10px;border-radius:10px}
+.fc-front .fc-label{background:#e8edf8;color:var(--gray)}
+.fc-back .fc-label{background:rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
+.fc-q{font-size:1rem;font-weight:800;color:var(--navy);line-height:1.5}
+.fc-a{font-size:.82rem;color:#fff;line-height:1.55;max-height:190px;overflow-y:auto;white-space:pre-wrap;text-align:left;width:100%}
+.fc-hint{font-size:.71rem;color:var(--gray);margin-top:10px}
+.fc-back .fc-hint{color:rgba(255,255,255,.45)}
+.fc-rating{display:none;gap:8px;flex-wrap:wrap;background:#fff;border-radius:16px;border:2px solid var(--border);padding:12px 16px;align-items:center}
+.fc-rating.on{display:flex}
+.fc-rating-lbl{font-size:.76rem;font-weight:900;color:var(--gray);width:100%;margin-bottom:2px}
+.fr-btn{flex:1;min-width:56px;padding:9px 6px;border:2px solid var(--border);border-radius:11px;font-family:inherit;font-weight:900;font-size:.8rem;cursor:pointer;transition:all .15s;background:#fff}
+.fr-btn:hover{transform:translateY(-2px)}
+.fr-btn.again{border-color:#ef4444;color:#ef4444}.fr-btn.again:hover{background:#fee2e2}
+.fr-btn.hard{border-color:#f59e0b;color:#f59e0b}.fr-btn.hard:hover{background:#fffbeb}
+.fr-btn.good{border-color:var(--green);color:var(--green)}.fr-btn.good:hover{background:#f0fdf4}
+.fr-btn.easy{border-color:#8b5cf6;color:#8b5cf6}.fr-btn.easy:hover{background:#f5f3ff}
+.fc-done{background:#fff;border-radius:20px;border:2px solid var(--border);box-shadow:var(--sh);padding:32px;text-align:center;display:none}
+.fc-done.on{display:block}
+
 /* ── RIGHT PANEL ─────────────────────────────────────────── */
 .rpanel{background:#fff;border-left:2px solid var(--border);display:flex;flex-direction:column;
   height:calc(100vh - 54px);position:sticky;top:54px}
@@ -342,6 +378,7 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
       <button class="mode-btn" onclick="setMode('learn')">📖 Learn</button>
       <button class="mode-btn" onclick="setMode('stoich')">⚖️ Stoich</button>
       <button class="mode-btn" onclick="setMode('reactions')">🔥 Reactions</button>
+      <button class="mode-btn" onclick="setMode('flash')">🃏 Flashcards</button>
     </div>
 
     <!-- QUIZ AREA -->
@@ -408,7 +445,7 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
           <div style="font-size:.78rem;color:var(--gray);margin-top:2px">Molar mass · Mole conversions · Combustion calculations · Limiting reagents</div>
         </div>
       </div>
-      <div class="stoich-progress" id="stoichProgress">Question 1 of 12 · Score: 0/0</div>
+      <div class="stoich-progress" id="stoichProgress">Question 1 of 20 · Score: 0/0</div>
       <div class="sq" id="stoichQ"></div>
     </div>
 
@@ -420,6 +457,58 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
       </div>
       <div id="reactStudy"></div>
       <div id="reactQuiz" style="display:none;flex-direction:column;gap:14px"></div>
+    </div>
+
+    <!-- FLASHCARDS AREA -->
+    <div id="flashPanel">
+      <div class="flash-subtabs" id="flashSubtabs">
+        <button class="flash-stab on" onclick="setFlashDeck('properties')">⚗️ Properties</button>
+        <button class="flash-stab" onclick="setFlashDeck('uses')">🏭 Uses</button>
+        <button class="flash-stab" onclick="setFlashDeck('reactions')">🔥 Reactions</button>
+        <button class="flash-stab" onclick="setFlashDeck('all')">🔀 All</button>
+      </div>
+      <div class="flash-progress-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-weight:900;font-size:.88rem" id="flashDeckLabel">Properties Deck</span>
+          <span style="font-size:.76rem;font-weight:700;color:var(--gray)" id="flashDueCount">0 reviewed</span>
+        </div>
+        <div class="flash-bar-bg"><div class="flash-bar-fill" id="flashBar" style="width:0%"></div></div>
+        <div class="flash-stats">
+          <span>🔴 <span id="flashAgain">0</span> again</span>
+          <span>🟡 <span id="flashHard">0</span> hard</span>
+          <span>🟢 <span id="flashGood">0</span> good</span>
+          <span>💜 <span id="flashEasy">0</span> easy</span>
+        </div>
+      </div>
+      <div class="fc-wrap">
+        <div class="fc" id="flashCard" onclick="flipCard()">
+          <div class="fc-inner" id="flashCardInner">
+            <div class="fc-face fc-front">
+              <div class="fc-label" id="fcLabel">Properties</div>
+              <div class="fc-q" id="fcQ">Loading…</div>
+              <div class="fc-hint">Tap card to reveal answer</div>
+            </div>
+            <div class="fc-face fc-back">
+              <div class="fc-label" id="fcLabelBack">Answer</div>
+              <div class="fc-a" id="fcA"></div>
+              <div class="fc-hint">Rate how well you knew this</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-rating" id="fcRating">
+        <div class="fc-rating-lbl">How well did you know it?</div>
+        <button class="fr-btn again" onclick="rateCard(0)">🔴 Again</button>
+        <button class="fr-btn hard" onclick="rateCard(1)">🟡 Hard</button>
+        <button class="fr-btn good" onclick="rateCard(2)">🟢 Good</button>
+        <button class="fr-btn easy" onclick="rateCard(3)">💜 Easy</button>
+      </div>
+      <div class="fc-done" id="fcDone">
+        <div style="font-size:2.5rem;margin-bottom:10px">🎉</div>
+        <div style="font-weight:900;font-size:1.05rem;margin-bottom:8px">Deck Complete!</div>
+        <div style="font-size:.85rem;color:var(--gray);margin-bottom:18px" id="fcDoneSub">You reviewed all cards. Cards rated Again/Hard will come back sooner next session.</div>
+        <button style="padding:10px 24px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:900;font-size:.9rem;cursor:pointer" onclick="restartDeck()">Study Again →</button>
+      </div>
     </div>
 
   </div>
@@ -769,16 +858,18 @@ document.addEventListener('click',e=>{if(!e.target.closest('#userBtn')&&!e.targe
 let currentMode='quiz';
 function setMode(m){
   currentMode=m;
-  const modes=['quiz','learn','stoich','reactions'];
+  const modes=['quiz','learn','stoich','reactions','flash'];
   document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',modes[i]===m));
   document.getElementById('quizArea').style.display=m==='quiz'?'flex':'none';
   if(m==='quiz'){document.getElementById('quizArea').style.flexDirection='column';document.getElementById('quizArea').style.gap='16px';}
   document.getElementById('learnPanel').classList.toggle('on',m==='learn');
   document.getElementById('stoichPanel').classList.toggle('on',m==='stoich');
   document.getElementById('reactPanel').classList.toggle('on',m==='reactions');
+  document.getElementById('flashPanel').classList.toggle('on',m==='flash');
   if(m==='learn')buildLearnCards();
   if(m==='stoich')buildStoich();
   if(m==='reactions')buildReactPanel();
+  if(m==='flash')buildFlash();
 }
 
 // ══════════════════════════════════════════════════
@@ -1019,6 +1110,14 @@ const STOICH_DATA = [
   {q:'A sample of hydrocarbon burns completely to give 4.4 g of CO₂. How many moles of CO₂ were produced?\n(M of CO₂ = 44 g/mol)',opts:['0.1 mol','0.2 mol','0.4 mol','1 mol'],ans:0,expl:'n(CO₂) = m ÷ M = 4.4 g ÷ 44 g/mol = 0.1 mol.'},
   {q:'How many moles of O₂ are needed for the complete combustion of 1 mol of hexane (C₆H₁₄)?\nC₆H₁₄ + ? O₂ → 6CO₂ + 7H₂O',opts:['6 mol','7 mol','9 mol','9.5 mol'],ans:3,expl:'Balance O on right: 6×2 + 7×1 = 12 + 7 = 19 oxygen atoms.\nNeed 19 ÷ 2 = 9.5 mol O₂.'},
   {q:'What is the empirical formula of a compound with 40.0% C, 6.7% H, and 53.3% O by mass?\n(C=12, H=1, O=16 g/mol)',opts:['CH₂O','C₂H₄O₂','C₃H₆O₃','CHO'],ans:0,expl:'In 100 g: C = 40/12 = 3.33 mol, H = 6.7/1 = 6.7 mol, O = 53.3/16 = 3.33 mol.\nRatio = 1 : 2 : 1 → Empirical formula: CH₂O.'},
+  {q:'What is the molar mass of propanoic acid (C₃H₆O₂)?\n(C = 12, H = 1, O = 16 g/mol)',opts:['72 g/mol','74 g/mol','76 g/mol','70 g/mol'],ans:1,expl:'C₃H₆O₂: 3×12 + 6×1 + 2×16 = 36 + 6 + 32 = 74 g/mol.'},
+  {q:'How many moles of ethanol (C₂H₅OH, M = 46 g/mol) are in 92 grams?',opts:['1 mol','2 mol','3 mol','4 mol'],ans:1,expl:'n = m ÷ M = 92 g ÷ 46 g/mol = 2 mol.'},
+  {q:'How many grams of O₂ (M = 32 g/mol) are required to completely burn 1 mol of butane (C₄H₁₀)?\n2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O',opts:['208 g','416 g','104 g','320 g'],ans:0,expl:'From the equation: 2 mol C₄H₁₀ needs 13 mol O₂.\n1 mol C₄H₁₀ needs 13/2 = 6.5 mol O₂.\nMass = 6.5 × 32 = 208 g.'},
+  {q:'If the molar mass of glucose (C₆H₁₂O₆) is 180 g/mol, how many molecules are in 90 g?\n(Avogadro: 6.02 × 10²³)',opts:['6.02 × 10²³','3.01 × 10²³','1.80 × 10²³','9.03 × 10²³'],ans:1,expl:'mol = 90 ÷ 180 = 0.5 mol.\nMolecules = 0.5 × 6.02×10²³ = 3.01 × 10²³.'},
+  {q:'In the fermentation reaction C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂, how many grams of ethanol (M = 46 g/mol) are produced from 180 g of glucose (M = 180 g/mol)?',opts:['46 g','92 g','138 g','184 g'],ans:1,expl:'mol glucose = 180 ÷ 180 = 1 mol.\nmol ethanol = 1 × 2 = 2 mol.\nmass ethanol = 2 × 46 = 92 g.'},
+  {q:'What is the theoretical yield of CO₂ (M = 44 g/mol) when 44 g of propane (C₃H₈, M = 44 g/mol) undergoes complete combustion?\nC₃H₈ + 5O₂ → 3CO₂ + 4H₂O',opts:['44 g','88 g','132 g','176 g'],ans:2,expl:'mol C₃H₈ = 44 ÷ 44 = 1 mol.\nmol CO₂ = 1 × 3 = 3 mol.\nmass CO₂ = 3 × 44 = 132 g.'},
+  {q:'You need to make 0.5 mol of ethyl ethanoate (ester). The reaction is: CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O. How many grams of ethanoic acid (M = 60 g/mol) are needed (assuming 100% conversion)?',opts:['30 g','60 g','15 g','120 g'],ans:0,expl:'1 mol acid : 1 mol ester (1:1 ratio).\nmol acid needed = 0.5 mol.\nmass = 0.5 × 60 = 30 g.'},
+  {q:'A reaction has a theoretical yield of 50 g of product but only 40 g is actually obtained. What is the percent yield?',opts:['40%','50%','80%','125%'],ans:2,expl:'%yield = (actual ÷ theoretical) × 100\n= (40 ÷ 50) × 100 = 80%.'},
 ];
 
 let SQ_STATE={idx:0,score:{ok:0,tot:0}};
@@ -1099,6 +1198,13 @@ const REACT_QUIZ=[
   {q:'Saponification is the reaction of a fat (ester) with:',opts:['H₂SO₄ (acid)','HCl (acid)','NaOH (base)','H₂O only'],ans:2,expl:'Saponification: ester + NaOH → soap (sodium carboxylate) + glycerol. It is an irreversible, base-catalyzed hydrolysis. Used in soap production. Triglycerides + NaOH → 3 soap molecules + glycerol.'},
   {q:'Complete combustion of a hydrocarbon with EXCESS oxygen always produces:',opts:['CO and H₂O','CO₂ and H₂O','CO₂ and H₂','C (soot) and H₂O'],ans:1,expl:'Complete combustion (excess O₂): CₙHₘ + O₂ → CO₂ + H₂O. Limited oxygen → incomplete combustion → CO or soot. Always highly exothermic.'},
   {q:'In fermentation, what type of substance acts as the catalyst?',opts:['Inorganic acid','Metal (Ni, Pt)','Enzymes (from yeast)','AlCl₃'],ans:2,expl:'Enzymes are biological catalysts produced by yeast. They catalyze the conversion of glucose to ethanol and CO₂ under anaerobic conditions (~37°C). Enzymes are highly specific and function at low temperatures.'},
+  {q:'What type of alcohol CANNOT be oxidized by KMnO₄ or K₂Cr₂O₇?',opts:['Primary alcohol','Secondary alcohol','Tertiary alcohol','All can be oxidized'],ans:2,expl:'Tertiary alcohols cannot be oxidized because there is no hydrogen atom on the carbon bearing the –OH group. Primary → aldehyde → carboxylic acid. Secondary → ketone. Tertiary → no reaction.'},
+  {q:'Which test gives a silver mirror result when an aldehyde is present?',opts:['Fehling\'s test','Tollens\' test','Br₂ water test','KMnO₄ test'],ans:1,expl:'Tollens\' test: silver ammonia solution + aldehyde → silver mirror deposited on the test tube. Aldehydes are oxidized; ketones give NEGATIVE Tollens\' test. Fehling\'s also detects aldehydes (blue → brick red) but is not the silver mirror test.'},
+  {q:'Markovnikov\'s rule applies to which reaction?',opts:['Halogenation of alkanes','Combustion of hydrocarbons','Hydration of alkenes','Esterification'],ans:2,expl:'Markovnikov\'s rule: in the addition of H₂O (or HX) to an alkene, the –OH (or X) attaches to the MORE substituted carbon. Applies to hydration and HX addition to alkenes. Not relevant for free-radical halogenation or combustion.'},
+  {q:'What color change confirms that KMnO₄ is reacting with an alcohol or unsaturated compound?',opts:['Blue to colorless','Orange to green','Purple to colorless','Red to yellow'],ans:2,expl:'KMnO₄ is purple. When it oxidizes an alkene or alcohol, it is reduced and the purple color disappears (becomes colorless/brown MnO₂). K₂Cr₂O₇ changes orange → green when it acts as oxidizing agent.'},
+  {q:'Nylon and Kevlar are examples of which type of polymer?',opts:['Polyesters','Polyamides','Polyalkenes','Polyethers'],ans:1,expl:'Nylon and Kevlar are polyamides — polymers formed by many amide bonds (–CO–NH–). Amide bonds (peptide bonds) are the same type that link amino acids in proteins. The reaction forming them is a condensation reaction between amine and carboxylic acid groups.'},
+  {q:'Which product is formed by the addition of Br₂ to ethene (decolorization of bromine water)?',opts:['1,1-dibromoethane','1,2-dibromoethane','Bromoethane + HBr','Ethyne + 2HBr'],ans:1,expl:'C₂H₄ + Br₂ → BrCH₂CH₂Br (1,2-dibromoethane). Br adds one to each carbon of the double bond (anti-addition via bromonium ion). The orange Br₂ water is decolorized — positive test for C=C double bond.'},
+  {q:'The reaction CH₃COOH + NaOH → CH₃COONa + H₂O is an example of:',opts:['Esterification','Saponification','Neutralization','Combustion'],ans:2,expl:'A carboxylic acid reacting with a base (NaOH) to form a salt (sodium ethanoate) and water is a neutralization reaction. Esterification requires an alcohol, not a base. Saponification is the base hydrolysis of an ester specifically.'},
 ];
 
 let RQ_STATE={tab:'study',qIdx:0,score:{ok:0,tot:0},built:false};
@@ -1192,6 +1298,111 @@ function nextReactQ(){
   RQ_STATE.qIdx++;
   showReactQ();
 }
+
+// ══════════════════════════════════════════════════
+//  FLASHCARD DATA + SPACED REPETITION
+// ══════════════════════════════════════════════════
+const FC_PROPS=LEARN_DATA.map(d=>({id:'prop_'+d.cat,deck:'properties',label:d.title+' · Properties',q:'What are the key physical and chemical properties of '+d.title+'?',a:d.props}));
+const FC_USES=LEARN_DATA.map(d=>({id:'uses_'+d.cat,deck:'uses',label:d.title+' · Uses & Applications',q:'What are the main uses and applications of '+d.title+'?',a:d.uses}));
+const FC_REACT=REACTIONS_DATA.map(r=>({id:'react_'+r.name.replace(/[\s()]/g,'_'),deck:'reactions',label:r.name+' · '+r.type,q:r.name+': What are the reactants, products, and catalyst?',a:'Reactants: '+r.reactants+'\nProducts: '+r.products+'\nCatalyst: '+r.catalyst+'\nConditions: '+r.conditions+'\n\n'+r.eq}));
+
+const SRS_KEY='chemnomen_srs_v2';
+function loadSRS(){return JSON.parse(localStorage.getItem(SRS_KEY)||'{}')}
+function saveSRS(s){localStorage.setItem(SRS_KEY,JSON.stringify(s))}
+function getSRSCard(id){const s=loadSRS();return s[id]||{id,interval:1,ef:2.5,reps:0,due:0};}
+function updateSRS(id,rating){
+  const s=loadSRS();const c=s[id]||{id,interval:1,ef:2.5,reps:0,due:0};const DAY=86400000;
+  if(rating===0){c.interval=1;c.reps=0;}
+  else if(rating===1){c.interval=Math.max(1,Math.round(c.interval*1.2));c.ef=Math.max(1.3,c.ef-0.15);}
+  else if(rating===2){c.reps++;c.interval=c.reps<=1?1:c.reps===2?6:Math.round(c.interval*c.ef);}
+  else{c.reps++;c.interval=c.reps<=1?1:c.reps===2?6:Math.round(c.interval*c.ef*1.3);c.ef=Math.min(2.65,c.ef+0.15);}
+  c.due=Date.now()+c.interval*DAY;s[id]=c;saveSRS(s);
+}
+
+let FC_ST={deck:'properties',all:[],queue:[],idx:0,stats:{again:0,hard:0,good:0,easy:0},built:false};
+
+function getAllFC(deck){
+  if(deck==='properties')return FC_PROPS;
+  if(deck==='uses')return FC_USES;
+  if(deck==='reactions')return FC_REACT;
+  return [...FC_PROPS,...FC_USES,...FC_REACT];
+}
+
+function setFlashDeck(deck){
+  FC_ST.deck=deck;FC_ST.stats={again:0,hard:0,good:0,easy:0};
+  const decks=['properties','uses','reactions','all'];
+  document.querySelectorAll('.flash-stab').forEach((b,i)=>b.classList.toggle('on',decks[i]===deck));
+  buildFlashDeck();
+}
+
+function buildFlashDeck(){
+  const all=getAllFC(FC_ST.deck);
+  const now=Date.now();
+  let due=all.filter(c=>getSRSCard(c.id).due<=now);
+  if(!due.length)due=[...all];
+  FC_ST.all=all;FC_ST.queue=shuffle([...due]);FC_ST.idx=0;
+  const names={properties:'⚗️ Properties Deck',uses:'🏭 Uses Deck',reactions:'🔥 Reactions Deck',all:'🔀 Full Deck'};
+  document.getElementById('flashDeckLabel').textContent=names[FC_ST.deck]||'Deck';
+  document.getElementById('fcDone').classList.remove('on');
+  document.getElementById('flashCard').style.display='';
+  document.getElementById('fcRating').classList.remove('on');
+  document.getElementById('flashCard').classList.remove('flipped');
+  showFC();updateFCStats();
+}
+
+function buildFlash(){
+  if(FC_ST.built)return;FC_ST.built=true;setFlashDeck('properties');
+}
+
+function showFC(){
+  const q=FC_ST.queue[FC_ST.idx];
+  if(!q){showFCDone();return;}
+  document.getElementById('flashCard').classList.remove('flipped');
+  document.getElementById('fcRating').classList.remove('on');
+  document.getElementById('fcLabel').textContent=q.label;
+  document.getElementById('fcLabelBack').textContent=q.label;
+  document.getElementById('fcQ').textContent=q.q;
+  document.getElementById('fcA').textContent=q.a;
+  updateFCStats();
+}
+
+function flipCard(){
+  if(FC_ST.idx>=FC_ST.queue.length)return;
+  const card=document.getElementById('flashCard');
+  const flipped=card.classList.toggle('flipped');
+  if(flipped)document.getElementById('fcRating').classList.add('on');
+}
+
+function rateCard(rating){
+  const q=FC_ST.queue[FC_ST.idx];if(!q)return;
+  updateSRS(q.id,rating);
+  const keys=['again','hard','good','easy'];FC_ST.stats[keys[rating]]++;
+  if(rating===0)FC_ST.queue.push({...q});
+  FC_ST.idx++;
+  if(FC_ST.idx>=FC_ST.queue.length){showFCDone();return;}
+  showFC();
+}
+
+function updateFCStats(){
+  const done=FC_ST.idx,total=FC_ST.queue.length;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('flashBar').style.width=pct+'%';
+  document.getElementById('flashDueCount').textContent=done+'/'+total+' reviewed';
+  document.getElementById('flashAgain').textContent=FC_ST.stats.again;
+  document.getElementById('flashHard').textContent=FC_ST.stats.hard;
+  document.getElementById('flashGood').textContent=FC_ST.stats.good;
+  document.getElementById('flashEasy').textContent=FC_ST.stats.easy;
+}
+
+function showFCDone(){
+  const s=FC_ST.stats,tot=s.again+s.hard+s.good+s.easy,good=s.good+s.easy;
+  document.getElementById('flashCard').style.display='none';
+  document.getElementById('fcRating').classList.remove('on');
+  document.getElementById('fcDone').classList.add('on');
+  document.getElementById('fcDoneSub').textContent='Session complete! '+good+'/'+tot+' rated Good or Easy. Cards rated Again/Hard will repeat sooner next time.';
+}
+
+function restartDeck(){FC_ST.stats={again:0,hard:0,good:0,easy:0};buildFlashDeck();}
 
 // ══════════════════════════════════════════════════
 //  INIT
