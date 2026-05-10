@@ -964,6 +964,10 @@ function isLoggedIn(){return!!AUTH;}
 function saveAuth(d){AUTH=d;localStorage.setItem(UK,JSON.stringify(d));}
 function logout(){AUTH=null;localStorage.removeItem(UK);renderAuthUI();closeDropdown();}
 
+const GK='chemnomen_guest_v1';
+function loadGuest(){return JSON.parse(localStorage.getItem(GK)||'{"score":0,"correct":0,"total":0}');}
+function saveGuest(d){localStorage.setItem(GK,JSON.stringify(d));}
+
 let mTab='login';
 function openModal(){document.getElementById('modalBg').classList.add('on');}
 function closeModal(){document.getElementById('modalBg').classList.remove('on');}
@@ -996,7 +1000,7 @@ function renderAuthUI(){
   const show=isLoggedIn();
   document.getElementById('loginBtn').style.display=show?'none':'flex';
   document.getElementById('userBtn').style.display=show?'flex':'none';
-  document.getElementById('hdrScore').style.display=show?'flex':'none';
+  document.getElementById('hdrScore').style.display='flex';
   if(show){
     document.getElementById('userBtnName').textContent=AUTH.username;
     document.getElementById('hdrScoreNum').textContent=AUTH.score||0;
@@ -1004,6 +1008,9 @@ function renderAuthUI(){
     document.getElementById('udRole').textContent=AUTH.role==='admin'?'👑 admin':'student';
     document.getElementById('udScore').textContent=AUTH.score||0;
     document.getElementById('udCorrect').textContent=`${AUTH.correct||0}/${AUTH.total||0}`;
+  } else {
+    const g=loadGuest();
+    document.getElementById('hdrScoreNum').textContent=g.score||0;
   }
   const hint=document.getElementById('lbHint');
   if(hint)hint.style.display=show?'none':'block';
@@ -1169,7 +1176,15 @@ function updScore(){
 function showToast(msg){const t=document.getElementById('ptsToast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
 
 async function postProgress(correct,points){
-  if(!isLoggedIn())return;
+  if(!isLoggedIn()){
+    const g=loadGuest();
+    g.score+=points||0;
+    if(correct)g.correct++;
+    g.total++;
+    saveGuest(g);
+    document.getElementById('hdrScoreNum').textContent=g.score;
+    return;
+  }
   try{
     const res=await fetch('/.netlify/functions/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:AUTH.token,correct,points,category:S.compound.cat})});
     const data=await res.json();
