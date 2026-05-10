@@ -221,6 +221,27 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .fr-btn.easy{border-color:#8b5cf6;color:#8b5cf6}.fr-btn.easy:hover{background:#f5f3ff}
 .fc-done{background:#fff;border-radius:20px;border:2px solid var(--border);box-shadow:var(--sh);padding:32px;text-align:center;display:none}
 .fc-done.on{display:block}
+.flash-restart-btn{padding:6px 16px;background:none;border:2px solid var(--border);border-radius:10px;font-family:inherit;font-weight:800;font-size:.78rem;color:var(--gray);cursor:pointer;transition:all .15s;white-space:nowrap}
+.flash-restart-btn:hover{border-color:var(--pink);color:var(--pink)}
+.fq-card{background:#fff;border-radius:20px;border:2px solid var(--border);box-shadow:var(--sh);padding:24px;display:flex;flex-direction:column;gap:12px}
+.fq-label{font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);background:#e8edf8;padding:3px 10px;border-radius:10px;display:inline-block;width:fit-content}
+.fq-q{font-size:1rem;font-weight:800;color:var(--navy);line-height:1.5}
+.fq-reveal-btn{padding:12px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:900;font-size:.9rem;cursor:pointer;transition:background .15s}
+.fq-reveal-btn:hover{background:var(--navy2)}
+.fq-answer{background:#f0f4ff;border-radius:12px;border:1.5px solid var(--border);padding:14px 16px;font-size:.84rem;color:var(--navy);line-height:1.6;white-space:pre-wrap;display:none}
+.fq-answer.on{display:block}
+.fq-grade-btns{display:none;gap:10px}
+.fq-grade-btns.on{display:flex}
+.fq-correct-btn{flex:1;padding:12px;border:2.5px solid var(--ok);border-radius:12px;background:#fff;font-family:inherit;font-weight:900;font-size:.88rem;color:#166534;cursor:pointer;transition:all .15s}
+.fq-correct-btn:hover{background:#f0fdf4;transform:translateY(-2px)}
+.fq-wrong-btn{flex:1;padding:12px;border:2.5px solid var(--error);border-radius:12px;background:#fff;font-family:inherit;font-weight:900;font-size:.88rem;color:#991b1b;cursor:pointer;transition:all .15s}
+.fq-wrong-btn:hover{background:#fff1f1;transform:translateY(-2px)}
+.fq-next-btn{padding:12px;background:linear-gradient(135deg,var(--green),#4ade80);color:var(--navy);border:none;border-radius:12px;font-family:inherit;font-weight:900;font-size:.92rem;cursor:pointer;transition:all .18s;display:none}
+.fq-next-btn.on{display:block}
+.fq-next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(90,191,50,.3)}
+.fq-result-badge{display:none;padding:9px 14px;border-radius:11px;font-weight:800;font-size:.84rem;line-height:1.4}
+.fq-result-badge.correct{display:block;background:#dcfce7;color:#166534;border:2px solid #86efac}
+.fq-result-badge.wrong{display:block;background:#fee2e2;color:#991b1b;border:2px solid #fca5a5}
 
 /* ── RIGHT PANEL ─────────────────────────────────────────── */
 .rpanel{background:#fff;border-left:2px solid var(--border);display:flex;flex-direction:column;
@@ -461,54 +482,102 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 
     <!-- FLASHCARDS AREA -->
     <div id="flashPanel">
+
+      <!-- Top row: Study/Quiz mode + Restart -->
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="flash-subtabs">
+          <button class="flash-stab on" id="fmStudyBtn" onclick="setFlashMode('study')">📚 Study</button>
+          <button class="flash-stab" id="fmQuizBtn" onclick="setFlashMode('quiz')">🎯 Quiz</button>
+        </div>
+        <button class="flash-restart-btn" onclick="restartFlash()">↺ Restart</button>
+      </div>
+
+      <!-- Deck selector (shared by both modes) -->
       <div class="flash-subtabs" id="flashSubtabs">
         <button class="flash-stab on" onclick="setFlashDeck('properties')">⚗️ Properties</button>
         <button class="flash-stab" onclick="setFlashDeck('uses')">🏭 Uses</button>
         <button class="flash-stab" onclick="setFlashDeck('reactions')">🔥 Reactions</button>
         <button class="flash-stab" onclick="setFlashDeck('all')">🔀 All</button>
       </div>
-      <div class="flash-progress-wrap">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-weight:900;font-size:.88rem" id="flashDeckLabel">Properties Deck</span>
-          <span style="font-size:.76rem;font-weight:700;color:var(--gray)" id="flashDueCount">0 reviewed</span>
+
+      <!-- ── STUDY MODE ─────────────────────── -->
+      <div id="flashStudyDiv" style="display:flex;flex-direction:column;gap:14px">
+        <div class="flash-progress-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-weight:900;font-size:.88rem" id="flashDeckLabel">Properties Deck</span>
+            <span style="font-size:.76rem;font-weight:700;color:var(--gray)" id="flashDueCount">0 reviewed</span>
+          </div>
+          <div class="flash-bar-bg"><div class="flash-bar-fill" id="flashBar" style="width:0%"></div></div>
+          <div class="flash-stats">
+            <span>🔴 <span id="flashAgain">0</span> again</span>
+            <span>🟡 <span id="flashHard">0</span> hard</span>
+            <span>🟢 <span id="flashGood">0</span> good</span>
+            <span>💜 <span id="flashEasy">0</span> easy</span>
+          </div>
         </div>
-        <div class="flash-bar-bg"><div class="flash-bar-fill" id="flashBar" style="width:0%"></div></div>
-        <div class="flash-stats">
-          <span>🔴 <span id="flashAgain">0</span> again</span>
-          <span>🟡 <span id="flashHard">0</span> hard</span>
-          <span>🟢 <span id="flashGood">0</span> good</span>
-          <span>💜 <span id="flashEasy">0</span> easy</span>
-        </div>
-      </div>
-      <div class="fc-wrap">
-        <div class="fc" id="flashCard" onclick="flipCard()">
-          <div class="fc-inner" id="flashCardInner">
-            <div class="fc-face fc-front">
-              <div class="fc-label" id="fcLabel">Properties</div>
-              <div class="fc-q" id="fcQ">Loading…</div>
-              <div class="fc-hint">Tap card to reveal answer</div>
-            </div>
-            <div class="fc-face fc-back">
-              <div class="fc-label" id="fcLabelBack">Answer</div>
-              <div class="fc-a" id="fcA"></div>
-              <div class="fc-hint">Rate how well you knew this</div>
+        <div class="fc-wrap">
+          <div class="fc" id="flashCard" onclick="flipCard()">
+            <div class="fc-inner">
+              <div class="fc-face fc-front">
+                <div class="fc-label" id="fcLabel">Properties</div>
+                <div class="fc-q" id="fcQ">Loading…</div>
+                <div class="fc-hint">Tap card to reveal answer</div>
+              </div>
+              <div class="fc-face fc-back">
+                <div class="fc-label" id="fcLabelBack">Answer</div>
+                <div class="fc-a" id="fcA"></div>
+                <div class="fc-hint">Rate how well you knew this</div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="fc-rating" id="fcRating">
+          <div class="fc-rating-lbl">How well did you know it?</div>
+          <button class="fr-btn again" onclick="rateCard(0)">🔴 Again</button>
+          <button class="fr-btn hard" onclick="rateCard(1)">🟡 Hard</button>
+          <button class="fr-btn good" onclick="rateCard(2)">🟢 Good</button>
+          <button class="fr-btn easy" onclick="rateCard(3)">💜 Easy</button>
+        </div>
+        <div class="fc-done" id="fcDone">
+          <div style="font-size:2.5rem;margin-bottom:10px">🎉</div>
+          <div style="font-weight:900;font-size:1.05rem;margin-bottom:8px">Deck Complete!</div>
+          <div style="font-size:.85rem;color:var(--gray)" id="fcDoneSub">Cards rated Again/Hard will appear sooner next session.</div>
+        </div>
       </div>
-      <div class="fc-rating" id="fcRating">
-        <div class="fc-rating-lbl">How well did you know it?</div>
-        <button class="fr-btn again" onclick="rateCard(0)">🔴 Again</button>
-        <button class="fr-btn hard" onclick="rateCard(1)">🟡 Hard</button>
-        <button class="fr-btn good" onclick="rateCard(2)">🟢 Good</button>
-        <button class="fr-btn easy" onclick="rateCard(3)">💜 Easy</button>
+
+      <!-- ── QUIZ MODE ──────────────────────── -->
+      <div id="flashQuizDiv" style="display:none;flex-direction:column;gap:14px">
+        <div class="flash-progress-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-weight:900;font-size:.88rem" id="fqDeckLabel">Properties Quiz</span>
+            <span id="fqScore" style="font-size:.76rem;font-weight:900;color:var(--navy)">✓ 0 · ✗ 0</span>
+          </div>
+          <div class="flash-bar-bg"><div class="flash-bar-fill" id="fqBar" style="width:0%"></div></div>
+          <div class="flash-stats">
+            <span>Card <span id="fqCurrent">1</span> of <span id="fqTotal">0</span></span>
+            <span style="color:var(--ok)">✓ <span id="fqRight">0</span></span>
+            <span style="color:var(--error)">✗ <span id="fqWrong">0</span></span>
+          </div>
+        </div>
+        <div class="fq-card" id="fqCard">
+          <div class="fq-label" id="fqLabel">Properties</div>
+          <div class="fq-q" id="fqQ">Loading…</div>
+          <button class="fq-reveal-btn" id="fqRevealBtn" onclick="revealFQAnswer()">👁 Show Answer</button>
+          <div class="fq-answer" id="fqAnswer"></div>
+          <div class="fq-grade-btns" id="fqGradeBtns">
+            <button class="fq-wrong-btn" onclick="answerFQ(false)">✗ Didn't know</button>
+            <button class="fq-correct-btn" onclick="answerFQ(true)">✓ I knew it</button>
+          </div>
+          <div class="fq-result-badge" id="fqResultBadge"></div>
+          <button class="fq-next-btn" id="fqNextBtn" onclick="nextFQ()">Next Question →</button>
+        </div>
+        <div class="fc-done" id="fqDone">
+          <div style="font-size:2.5rem;margin-bottom:10px">🎯</div>
+          <div style="font-weight:900;font-size:1.05rem;margin-bottom:8px">Quiz Complete!</div>
+          <div style="font-size:.85rem;color:var(--gray)" id="fqDoneSub">Session complete.</div>
+        </div>
       </div>
-      <div class="fc-done" id="fcDone">
-        <div style="font-size:2.5rem;margin-bottom:10px">🎉</div>
-        <div style="font-weight:900;font-size:1.05rem;margin-bottom:8px">Deck Complete!</div>
-        <div style="font-size:.85rem;color:var(--gray);margin-bottom:18px" id="fcDoneSub">You reviewed all cards. Cards rated Again/Hard will come back sooner next session.</div>
-        <button style="padding:10px 24px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-family:inherit;font-weight:900;font-size:.9rem;cursor:pointer" onclick="restartDeck()">Study Again →</button>
-      </div>
+
     </div>
 
   </div>
@@ -1319,7 +1388,8 @@ function updateSRS(id,rating){
   c.due=Date.now()+c.interval*DAY;s[id]=c;saveSRS(s);
 }
 
-let FC_ST={deck:'properties',all:[],queue:[],idx:0,stats:{again:0,hard:0,good:0,easy:0},built:false};
+let FC_ST={deck:'properties',mode:'study',all:[],queue:[],idx:0,stats:{again:0,hard:0,good:0,easy:0},built:false};
+let FQ_ST={queue:[],idx:0,right:0,wrong:0};
 
 function getAllFC(deck){
   if(deck==='properties')return FC_PROPS;
@@ -1328,11 +1398,24 @@ function getAllFC(deck){
   return [...FC_PROPS,...FC_USES,...FC_REACT];
 }
 
+function setFlashMode(mode){
+  FC_ST.mode=mode;
+  document.getElementById('fmStudyBtn').classList.toggle('on',mode==='study');
+  document.getElementById('fmQuizBtn').classList.toggle('on',mode==='quiz');
+  const sd=document.getElementById('flashStudyDiv');
+  const qd=document.getElementById('flashQuizDiv');
+  sd.style.display=mode==='study'?'flex':'none';
+  qd.style.display=mode==='quiz'?'flex':'none';
+  if(mode==='quiz')buildFQDeck();
+}
+
 function setFlashDeck(deck){
   FC_ST.deck=deck;FC_ST.stats={again:0,hard:0,good:0,easy:0};
-  const decks=['properties','uses','reactions','all'];
-  document.querySelectorAll('.flash-stab').forEach((b,i)=>b.classList.toggle('on',decks[i]===deck));
-  buildFlashDeck();
+  document.querySelectorAll('#flashSubtabs .flash-stab').forEach((b,i)=>{
+    const decks=['properties','uses','reactions','all'];
+    b.classList.toggle('on',decks[i]===deck);
+  });
+  if(FC_ST.mode==='study')buildFlashDeck();else buildFQDeck();
 }
 
 function buildFlashDeck(){
@@ -1351,7 +1434,13 @@ function buildFlashDeck(){
 }
 
 function buildFlash(){
-  if(FC_ST.built)return;FC_ST.built=true;setFlashDeck('properties');
+  if(FC_ST.built)return;FC_ST.built=true;
+  setFlashDeck('properties');
+}
+
+function restartFlash(){
+  FC_ST.stats={again:0,hard:0,good:0,easy:0};
+  if(FC_ST.mode==='study')buildFlashDeck();else buildFQDeck();
 }
 
 function showFC(){
@@ -1368,8 +1457,7 @@ function showFC(){
 
 function flipCard(){
   if(FC_ST.idx>=FC_ST.queue.length)return;
-  const card=document.getElementById('flashCard');
-  const flipped=card.classList.toggle('flipped');
+  const flipped=document.getElementById('flashCard').classList.toggle('flipped');
   if(flipped)document.getElementById('fcRating').classList.add('on');
 }
 
@@ -1399,10 +1487,80 @@ function showFCDone(){
   document.getElementById('flashCard').style.display='none';
   document.getElementById('fcRating').classList.remove('on');
   document.getElementById('fcDone').classList.add('on');
-  document.getElementById('fcDoneSub').textContent='Session complete! '+good+'/'+tot+' rated Good or Easy. Cards rated Again/Hard will repeat sooner next time.';
+  document.getElementById('fcDoneSub').textContent='Session done! '+good+'/'+tot+' rated Good or Easy. Cards rated Again/Hard will repeat sooner.';
 }
 
-function restartDeck(){FC_ST.stats={again:0,hard:0,good:0,easy:0};buildFlashDeck();}
+// ── QUIZ MODE ────────────────────────────────────
+function buildFQDeck(){
+  const all=getAllFC(FC_ST.deck);
+  // Sort most-overdue first so the hardest cards appear early
+  const now=Date.now();
+  const sorted=[...all].sort((a,b)=>getSRSCard(a.id).due-getSRSCard(b.id).due);
+  FQ_ST.queue=sorted;FQ_ST.idx=0;FQ_ST.right=0;FQ_ST.wrong=0;
+  const names={properties:'⚗️ Properties Quiz',uses:'🏭 Uses Quiz',reactions:'🔥 Reactions Quiz',all:'🔀 Full Quiz'};
+  document.getElementById('fqDeckLabel').textContent=names[FC_ST.deck]||'Quiz';
+  document.getElementById('fqDone').classList.remove('on');
+  document.getElementById('fqCard').style.display='';
+  showFQ();updateFQStats();
+}
+
+function showFQ(){
+  const q=FQ_ST.queue[FQ_ST.idx];
+  if(!q){showFQDone();return;}
+  document.getElementById('fqLabel').textContent=q.label;
+  document.getElementById('fqQ').textContent=q.q;
+  document.getElementById('fqAnswer').textContent=q.a;
+  document.getElementById('fqAnswer').classList.remove('on');
+  document.getElementById('fqRevealBtn').style.display='';
+  document.getElementById('fqGradeBtns').classList.remove('on');
+  document.getElementById('fqResultBadge').className='fq-result-badge';
+  document.getElementById('fqNextBtn').className='fq-next-btn';
+  updateFQStats();
+}
+
+function revealFQAnswer(){
+  document.getElementById('fqAnswer').classList.add('on');
+  document.getElementById('fqRevealBtn').style.display='none';
+  document.getElementById('fqGradeBtns').classList.add('on');
+}
+
+function answerFQ(correct){
+  const q=FQ_ST.queue[FQ_ST.idx];if(!q)return;
+  updateSRS(q.id,correct?2:0);
+  if(correct){FQ_ST.right++;}else{FQ_ST.wrong++;FQ_ST.queue.push({...q});}
+  document.getElementById('fqGradeBtns').classList.remove('on');
+  const badge=document.getElementById('fqResultBadge');
+  badge.textContent=correct?'✅ Correct — this card will appear less often!':'❌ Incorrect — this card will come back more often.';
+  badge.className='fq-result-badge '+(correct?'correct':'wrong');
+  document.getElementById('fqNextBtn').className='fq-next-btn on';
+  updateFQStats();
+}
+
+function nextFQ(){
+  FQ_ST.idx++;
+  if(FQ_ST.idx>=FQ_ST.queue.length){showFQDone();return;}
+  showFQ();
+}
+
+function updateFQStats(){
+  const origTotal=getAllFC(FC_ST.deck).length;
+  const done=FQ_ST.idx;
+  const pct=origTotal?Math.round(Math.min(done,origTotal)/origTotal*100):0;
+  document.getElementById('fqBar').style.width=pct+'%';
+  document.getElementById('fqScore').innerHTML='<span style="color:var(--ok)">✓ '+FQ_ST.right+'</span> · <span style="color:var(--error)">✗ '+FQ_ST.wrong+'</span>';
+  document.getElementById('fqCurrent').textContent=Math.min(done+1,FQ_ST.queue.length);
+  document.getElementById('fqTotal').textContent=FQ_ST.queue.length;
+  document.getElementById('fqRight').textContent=FQ_ST.right;
+  document.getElementById('fqWrong').textContent=FQ_ST.wrong;
+}
+
+function showFQDone(){
+  document.getElementById('fqCard').style.display='none';
+  document.getElementById('fqDone').classList.add('on');
+  const tot=FQ_ST.right+FQ_ST.wrong;
+  const pct=tot?Math.round(100*FQ_ST.right/tot):0;
+  document.getElementById('fqDoneSub').textContent='You got '+FQ_ST.right+'/'+tot+' correct ('+pct+'%). Cards you missed will appear more often next time — hit Restart to go again!';
+}
 
 // ══════════════════════════════════════════════════
 //  INIT
