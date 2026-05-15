@@ -1333,7 +1333,8 @@ function answerStoich(btn,chosen,correct){
   opts[correct].classList.add('correct');
   if(chosen!==correct)btn.classList.add('wrong');
   SQ_STATE.score.tot++;
-  if(chosen===correct)SQ_STATE.score.ok++;
+  if(chosen===correct){SQ_STATE.score.ok++;postProgress(true,5);showToast('+5 pts');}
+  else postProgress(false,0);
   document.getElementById('sq-expl').classList.add('on');
   document.getElementById('sq-next').classList.add('on');
 }
@@ -1487,7 +1488,8 @@ function answerReactQ(btn,chosen,correct){
   opts[correct].classList.add('correct');
   if(chosen!==correct)btn.classList.add('wrong');
   RQ_STATE.score.tot++;
-  if(chosen===correct)RQ_STATE.score.ok++;
+  if(chosen===correct){RQ_STATE.score.ok++;postProgress(true,5);showToast('+5 pts');}
+  else postProgress(false,0);
   document.getElementById('rq-expl').classList.add('on');
   document.getElementById('rq-next').classList.add('on');
 }
@@ -1718,10 +1720,12 @@ function answerFQ(correct){
   const nxt=document.getElementById('fqNextBtn');
   if(correct){
     FQ_ST.right++;
+    postProgress(true,10);showToast('+10 pts');
     badge.textContent='✅ Excellent — card mastered for this session!';
     badge.className='fq-result-badge correct';
   } else {
     FQ_ST.wrong++;
+    postProgress(false,0);
     FQ_ST.queue.push({...q,stage:'mcq'});
     badge.textContent='❌ No worries — this card will repeat from Step 1.';
     badge.className='fq-result-badge wrong';
