@@ -279,6 +279,17 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 .rv-qa.open .rv-q{background:#e8edf8}
 .rv-intro{padding:10px 14px;background:linear-gradient(135deg,#e8f4ff,#f0f4ff);border-radius:12px;font-size:.82rem;color:var(--navy);font-weight:700;border:1.5px solid var(--border)}
 
+/* ── EXAM GUIDE PANEL ───────────────────────────────────── */
+#examPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
+#examPanel.on{display:flex}
+.eg-react{background:#f8faff;border-radius:12px;border:1px solid var(--border);padding:12px 14px;margin-bottom:8px}
+.eg-react:last-child{margin-bottom:0}
+.eg-react-name{font-weight:900;font-size:.88rem;color:var(--navy);margin-bottom:8px}
+.eg-row{display:grid;grid-template-columns:90px 1fr;gap:3px 8px;font-size:.79rem;line-height:1.5;margin-bottom:2px}
+.eg-lbl{font-weight:900;color:var(--gray);font-size:.74rem}
+.eg-val{color:#374151}
+.eg-eq{display:block;background:#1e3a5f;color:#fff;border-radius:8px;padding:8px 12px;font-size:.79rem;font-weight:900;margin-top:8px;letter-spacing:.2px;font-family:monospace}
+
 /* ── PREFIX / SUFFIX REFERENCE PANEL ────────────────────── */
 #prefixPanel{display:none;flex-direction:column;gap:14px;animation:fadeIn .3s ease}
 #prefixPanel.on{display:flex}
@@ -465,6 +476,7 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
       <button class="mode-btn" onclick="setMode('flash')">🃏 Flashcards</button>
       <button class="mode-btn" onclick="setMode('review')">📋 Review</button>
       <button class="mode-btn" onclick="setMode('prefixes')">🔤 Prefixes</button>
+      <button class="mode-btn" onclick="setMode('exam')">📝 Exam Guide</button>
     </div>
 
     <!-- QUIZ AREA -->
@@ -932,6 +944,237 @@ header{background:var(--navy);color:#fff;padding:10px 20px;display:flex;align-it
 
     </div><!-- end #prefixPanel -->
 
+    <!-- ══ EXAM GUIDE PANEL ══════════════════════════════════ -->
+    <div id="examPanel">
+
+      <!-- Overview card -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">📝</div>
+          <div>
+            <div class="pfx-card-title">Final Exam — Overview</div>
+            <div class="pfx-card-sub">67 pts · grades over 65 · 4 pages</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+          <table class="pfx-table">
+            <thead><tr><th>Part</th><th>Points</th><th>Topic</th><th>Difficulty</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><span class="pfx-badge chain">30 pts</span></td><td>Multiple Choice</td><td>Sencillo — solubility, distillation, hybridization</td></tr>
+              <tr><td>2</td><td><span class="pfx-badge chain">10 pts</span></td><td>True / False</td><td>Bastante sencillo</td></tr>
+              <tr><td>3</td><td><span class="pfx-badge suffix">12 pts</span></td><td>Nomenclature</td><td>Match letter to name</td></tr>
+              <tr><td>4</td><td><span class="pfx-badge multi">5 pts</span></td><td>Stoichiometry</td><td>Butane combustion</td></tr>
+              <tr><td>5</td><td><span class="pfx-badge prefix">~10 pts</span></td><td>Reactions</td><td>Fermentation, hydrogenation, halogenation, neutralization, oxidation</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Part 1: Multiple Choice -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">🔵</div>
+          <div>
+            <div class="pfx-card-title">Part 1 — Multiple Choice (30 pts)</div>
+            <div class="pfx-card-sub">Solubility · Fractional Distillation · Hybridization</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+          <div style="font-weight:900;font-size:.8rem;color:var(--navy);margin-bottom:5px">💧 Solubility in Water (de más a menos)</div>
+          <table class="pfx-table">
+            <thead><tr><th>Group</th><th>Soluble?</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Alcohols (short chain)</td><td><span class="pfx-badge chain">✅ Yes</span></td><td>–OH forms H-bonds with water</td></tr>
+              <tr><td>Carboxylic Acids (short)</td><td><span class="pfx-badge chain">✅ Yes</span></td><td>–COOH forms very strong H-bonds</td></tr>
+              <tr><td>Aldehydes / Ketones</td><td><span class="pfx-badge multi">⚠️ Partial</span></td><td>C=O accepts H-bonds but can't donate them</td></tr>
+              <tr><td>Amines (short)</td><td><span class="pfx-badge chain">✅ Yes</span></td><td>N lone pair accepts H-bonds</td></tr>
+              <tr><td>Ethers</td><td><span class="pfx-badge multi">⚠️ Slight</span></td><td>Only accept H-bonds, don't donate</td></tr>
+              <tr><td>Alkanes / Alkenes / Alkynes</td><td><span class="pfx-badge multi2">❌ No</span></td><td>Nonpolar — no H-bonding</td></tr>
+              <tr><td>Benzene / Aromatics</td><td><span class="pfx-badge multi2">❌ No</span></td><td>Nonpolar ring, insoluble</td></tr>
+            </tbody>
+          </table>
+          <div class="pfx-note">⚠️ Regla clave: cadena de carbono más larga = MENOS soluble (la parte hidrocarburo domina)</div>
+
+          <div style="font-weight:900;font-size:.8rem;color:var(--navy);margin:10px 0 5px">🏗️ Fractional Distillation — Separación del Petróleo</div>
+          <div class="pfx-note" style="margin-bottom:8px">NO es una reacción química. Cadena más corta = BP más bajo = sube más arriba en la columna.</div>
+          <table class="pfx-table">
+            <thead><tr><th>Fracción</th><th>BP</th><th>Uso</th></tr></thead>
+            <tbody>
+              <tr><td>Gases (C1–C4)</td><td>&lt;25°C</td><td>LPG, calefacción</td></tr>
+              <tr><td>Petrol / Gasolina</td><td>25–75°C</td><td>Autos</td></tr>
+              <tr><td>Naphtha</td><td>75–120°C</td><td>Petroquímica</td></tr>
+              <tr><td>Kerosene</td><td>150–250°C</td><td>Combustible de avión</td></tr>
+              <tr><td>Diesel</td><td>250–350°C</td><td>Camiones</td></tr>
+              <tr><td>Bitumen</td><td>&gt;350°C</td><td>Carreteras</td></tr>
+            </tbody>
+          </table>
+
+          <div style="font-weight:900;font-size:.8rem;color:var(--navy);margin:10px 0 5px">🔬 Hybridization</div>
+          <table class="pfx-table">
+            <thead><tr><th>Hybrid</th><th>Geometry</th><th>Angle</th><th>Examples</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pfx-badge chain">sp³</span></td><td>Tetrahedral</td><td>109.5°</td><td>Alkanes, alcohols, amines, ethers</td></tr>
+              <tr><td><span class="pfx-badge suffix">sp²</span></td><td>Trigonal planar</td><td>120°</td><td>Alkenes, aldehydes, ketones, benzene</td></tr>
+              <tr><td><span class="pfx-badge prefix">sp</span></td><td>Linear</td><td>180°</td><td>Alkynes (C≡C)</td></tr>
+            </tbody>
+          </table>
+          <div class="pfx-note">The number of hybrid orbitals created = number of orbitals combined (sp³=4, sp²=3, sp=2)</div>
+        </div>
+      </div>
+
+      <!-- Part 2: True / False -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">✅</div>
+          <div>
+            <div class="pfx-card-title">Part 2 — True / False (10 pts)</div>
+            <div class="pfx-card-sub">Memoriza cuáles son FALSE</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+          <table class="pfx-table">
+            <thead><tr><th>Statement</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Organic chemistry is the chemistry of carbon compounds</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>Organic compounds usually have LOWER melting points than inorganic</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>A hydrocarbon is made only of carbon and hydrogen atoms</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>The main application of alkanes is as fuels</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>Hydrocarbons separate in a fractionating tower by their boiling point</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>All plastics are polymers, but not all polymers are plastics</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>Unsaturated fats react with KMnO₄ (decolorize it)</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>Constitutional isomers have different connections between atoms</td><td><span class="pfx-badge chain">TRUE</span></td></tr>
+              <tr><td>Tertiary alcohols CAN be oxidized by KMnO₄</td><td><span class="pfx-badge multi2">FALSE ❌</span></td></tr>
+              <tr><td>The longer the carbon chain, the MORE soluble in water</td><td><span class="pfx-badge multi2">FALSE ❌</span></td></tr>
+              <tr><td>Petroleum is a sustainable product</td><td><span class="pfx-badge multi2">FALSE ❌</span></td></tr>
+              <tr><td>Benzene is water soluble</td><td><span class="pfx-badge multi2">FALSE ❌</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Part 3: Nomenclature -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">🔤</div>
+          <div>
+            <div class="pfx-card-title">Part 3 — Nomenclature (12 pts)</div>
+            <div class="pfx-card-sub">Suffix cheat sheet — busca el grupo, ese da el sufijo</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+          <table class="pfx-table">
+            <thead><tr><th>Group</th><th>Suffix / Prefix</th><th>Rule</th></tr></thead>
+            <tbody>
+              <tr><td>Alkane</td><td><span class="pfx-badge suffix">-ane</span></td><td>No locant needed</td></tr>
+              <tr><td>Alkene</td><td><span class="pfx-badge suffix">-ene</span></td><td>Locant before -ene (but-1-ene)</td></tr>
+              <tr><td>Alkyne</td><td><span class="pfx-badge suffix">-yne</span></td><td>Locant before -yne (but-2-yne)</td></tr>
+              <tr><td>Alcohol (–OH)</td><td><span class="pfx-badge suffix">-ol</span></td><td>Locant before -ol (propan-2-ol)</td></tr>
+              <tr><td>Aldehyde (–CHO)</td><td><span class="pfx-badge suffix">-al</span></td><td>Always C1 — no locant ever</td></tr>
+              <tr><td>Ketone (C=O middle)</td><td><span class="pfx-badge suffix">-one</span></td><td>Locant needed (pentan-3-one)</td></tr>
+              <tr><td>Carboxylic Acid (–COOH)</td><td><span class="pfx-badge suffix">-oic acid</span></td><td>Always C1 — "acid" at the end</td></tr>
+              <tr><td>Ester (–COO–)</td><td><span class="pfx-badge suffix">-yl …-oate</span></td><td>Alcohol alkyl first, then acid-oate</td></tr>
+              <tr><td>Amine (–NH₂)</td><td><span class="pfx-badge suffix">-amine</span></td><td>Secondary/tertiary: N-methyl- prefix on N</td></tr>
+              <tr><td>Amide (–CONH₂)</td><td><span class="pfx-badge suffix">-amide</span></td><td>Always C1 — no locant</td></tr>
+              <tr><td>Ether (R–O–R')</td><td><span class="pfx-badge prefix">-oxy- prefix</span></td><td>Smaller group → alkoxy- (methoxy-, ethoxy-)</td></tr>
+              <tr><td>Haloalkane (C–X)</td><td><span class="pfx-badge prefix">fluoro/chloro/bromo/iodo-</span></td><td>Always prefix, never suffix</td></tr>
+              <tr><td>Benzene 2 substituents</td><td><span class="pfx-badge chain">o- / m- / p-</span></td><td>ortho=1,2 · meta=1,3 · para=1,4</td></tr>
+            </tbody>
+          </table>
+          <div class="pfx-note">💡 Tip: encuentra el grupo funcional primero → ese da el sufijo → todo lo demás (–OH secundario, halogens, etc.) es prefijo</div>
+        </div>
+      </div>
+
+      <!-- Part 4: Stoichiometry -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">⚖️</div>
+          <div>
+            <div class="pfx-card-title">Part 4 — Stoichiometry (5 pts)</div>
+            <div class="pfx-card-sub">Combustión de butano — mismo formato que el examen de ethane</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+          <div style="font-weight:900;font-size:.78rem;color:var(--gray);margin-bottom:4px">BALANCED EQUATION:</div>
+          <code class="eg-eq">2 C₄H₁₀  +  13 O₂  →  8 CO₂  +  10 H₂O</code>
+          <table class="pfx-table" style="margin-top:10px;margin-bottom:10px">
+            <thead><tr><th>Molecule</th><th>M (g/mol)</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td><strong>C₄H₁₀ (butane)</strong></td><td><strong>58 g/mol</strong></td><td>Reactant — 4×12 + 10×1</td></tr>
+              <tr><td>O₂</td><td>32 g/mol</td><td>Reactant</td></tr>
+              <tr><td>CO₂</td><td>44 g/mol</td><td>Product</td></tr>
+              <tr><td>H₂O</td><td>18 g/mol</td><td>Product</td></tr>
+            </tbody>
+          </table>
+          <div style="font-weight:900;font-size:.8rem;color:var(--navy);margin-bottom:6px">3 pasos — siempre los mismos:</div>
+          <div class="pfx-rule-row"><div class="pfx-rule-num">1</div><div class="pfx-rule-text"><strong>g → mol:</strong> mol = gramos ÷ M (peso molecular)</div></div>
+          <div class="pfx-rule-row"><div class="pfx-rule-num">2</div><div class="pfx-rule-text"><strong>mol reactivo → mol producto:</strong> usar la razón molar de la ecuación balanceada</div></div>
+          <div class="pfx-rule-row"><div class="pfx-rule-num">3</div><div class="pfx-rule-text"><strong>mol → g:</strong> gramos = mol × M</div></div>
+          <div class="pfx-note" style="margin-top:8px">📝 Ejemplo: 116 g C₄H₁₀ → mol = 116÷58 = <strong>2 mol</strong> → mol CO₂ = 2×(8÷2) = <strong>8 mol</strong> → g CO₂ = 8×44 = <strong>352 g</strong></div>
+        </div>
+      </div>
+
+      <!-- Part 5: Reactions -->
+      <div class="pfx-card">
+        <div class="pfx-card-hdr">
+          <div class="pfx-card-hdr-icon">🔥</div>
+          <div>
+            <div class="pfx-card-title">Part 5 — Reactions</div>
+            <div class="pfx-card-sub">Las 5 que salieron: Fermentation · Hydrogenation · Halogenation · Neutralization · Oxidation</div>
+          </div>
+        </div>
+        <div class="pfx-card-body">
+
+          <div class="eg-react">
+            <div class="eg-react-name">🍺 Fermentation</div>
+            <div class="eg-row"><div class="eg-lbl">Reactants</div><div class="eg-val">Glucose (C₆H₁₂O₆)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Products</div><div class="eg-val">Ethanol (C₂H₅OH) + CO₂</div></div>
+            <div class="eg-row"><div class="eg-lbl">Catalyst</div><div class="eg-val" style="font-weight:900;color:#7c3aed">Enzymes (from yeast) — biological catalyst</div></div>
+            <div class="eg-row"><div class="eg-lbl">Conditions</div><div class="eg-val">Anaerobic (no O₂), ~37°C</div></div>
+            <code class="eg-eq">C₆H₁₂O₆  →  2 C₂H₅OH  +  2 CO₂</code>
+          </div>
+
+          <div class="eg-react">
+            <div class="eg-react-name">🔧 Hydrogenation</div>
+            <div class="eg-row"><div class="eg-lbl">Reactants</div><div class="eg-val">Alkene + H₂</div></div>
+            <div class="eg-row"><div class="eg-lbl">Products</div><div class="eg-val">Alkane (saturated)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Catalyst</div><div class="eg-val" style="font-weight:900;color:#7c3aed">Ni, Pt, or Pd (metal catalyst)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Conditions</div><div class="eg-val">~150°C, metal surface</div></div>
+            <code class="eg-eq">C₂H₄  +  H₂  →  C₂H₆</code>
+          </div>
+
+          <div class="eg-react">
+            <div class="eg-react-name">☀️ Halogenation of Alkanes (Substitution)</div>
+            <div class="eg-row"><div class="eg-lbl">Reactants</div><div class="eg-val">Alkane + Cl₂ (or Br₂)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Products</div><div class="eg-val">Haloalkane + HCl</div></div>
+            <div class="eg-row"><div class="eg-lbl">Catalyst</div><div class="eg-val" style="font-weight:900;color:#7c3aed">UV light (hν) — free radical initiation</div></div>
+            <div class="eg-row"><div class="eg-lbl">Conditions</div><div class="eg-val">UV radiation required (NOT Lewis acid)</div></div>
+            <code class="eg-eq">CH₄  +  Cl₂  →  CH₃Cl  +  HCl</code>
+          </div>
+
+          <div class="eg-react">
+            <div class="eg-react-name">⚖️ Neutralization (Carboxylic Acid + Base)</div>
+            <div class="eg-row"><div class="eg-lbl">Reactants</div><div class="eg-val">Carboxylic acid (R–COOH) + NaOH</div></div>
+            <div class="eg-row"><div class="eg-lbl">Products</div><div class="eg-val">Carboxylate salt (R–COONa) + H₂O</div></div>
+            <div class="eg-row"><div class="eg-lbl">Catalyst</div><div class="eg-val" style="font-weight:900;color:#7c3aed">None</div></div>
+            <div class="eg-row"><div class="eg-lbl">Conditions</div><div class="eg-val">Aqueous solution, room temperature</div></div>
+            <code class="eg-eq">CH₃COOH  +  NaOH  →  CH₃COONa  +  H₂O</code>
+          </div>
+
+          <div class="eg-react">
+            <div class="eg-react-name">🔴 Complete Oxidation of a Primary Alcohol</div>
+            <div class="eg-row"><div class="eg-lbl">Reactants</div><div class="eg-val">Primary alcohol (R–CH₂OH)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Products</div><div class="eg-val">Carboxylic acid (via aldehyde intermediate)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Catalyst</div><div class="eg-val" style="font-weight:900;color:#7c3aed">KMnO₄ or K₂Cr₂O₇ (acidic conditions)</div></div>
+            <div class="eg-row"><div class="eg-lbl">Conditions</div><div class="eg-val">Acid (H₂SO₄), reflux / KMnO₄ purple→colorless / K₂Cr₂O₇ orange→green</div></div>
+            <code class="eg-eq">CH₃CH₂OH  →[O]→  CH₃CHO  →[O]→  CH₃COOH</code>
+            <div class="pfx-note" style="margin-top:8px">⚠️ Secondary → ketone only (stops there). Tertiary → NO reaction (no H on C bearing –OH)</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- end #examPanel -->
+
   </div>
 
   <!-- RIGHT PANEL -->
@@ -1348,7 +1591,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#userBtn')&&!e.targe
 let currentMode='quiz';
 function setMode(m){
   currentMode=m;
-  const modes=['quiz','learn','stoich','reactions','flash','review','prefixes'];
+  const modes=['quiz','learn','stoich','reactions','flash','review','prefixes','exam'];
   document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('on',modes[i]===m));
   document.getElementById('quizArea').style.display=m==='quiz'?'flex':'none';
   if(m==='quiz'){document.getElementById('quizArea').style.flexDirection='column';document.getElementById('quizArea').style.gap='16px';}
@@ -1357,6 +1600,7 @@ function setMode(m){
   document.getElementById('reactPanel').classList.toggle('on',m==='reactions');
   document.getElementById('flashPanel').classList.toggle('on',m==='flash');
   document.getElementById('prefixPanel').classList.toggle('on',m==='prefixes');
+  document.getElementById('examPanel').classList.toggle('on',m==='exam');
   const rp=document.getElementById('reviewPanel');
   rp.style.display=m==='review'?'flex':'none';
   if(m==='review'){rp.style.flexDirection='column';rp.style.gap='14px';buildReview();}
